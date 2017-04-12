@@ -9,6 +9,12 @@
 #import "CSMakeCallViewController.h"
 
 
+static const int kRenderViewHeight = 160;
+static const int kRenderViewWidth  = kRenderViewHeight * 3 / 4;
+static const int kRenderViewSpace = 10;
+
+
+
 @interface CSMakeCallViewController ()<TILCallNotificationListener,TILCallStatusListener, TILCallMemberEventListener>
 
 @property (nonatomic, strong) TILC2CCall *call;
@@ -24,6 +30,9 @@
  缩小
  */
 @property (weak, nonatomic) IBOutlet UIButton *switchRenderButton;
+
+
+@property (weak, nonatomic) IBOutlet UIView *btnsView;
 
 /**
  关闭摄像头
@@ -56,9 +65,21 @@
 //@property (weak, nonatomic) IBOutlet UIButton *hungUpButton;
 @property (weak, nonatomic) IBOutlet UIButton *endComButton;
 
-@property (nonatomic, strong, nonnull) NSArray *buttonsArray;
+@property (weak, nonatomic) IBOutlet UILabel *inviterLabel;
+@property (weak, nonatomic) IBOutlet UILabel *comDurationLabel;
+
+@property (weak, nonatomic) IBOutlet UIButton *numberButton;
+@property (weak, nonatomic) IBOutlet UIScrollView *memberScroll;
 
 
+
+@property (nonatomic, strong, nonnull) UIScrollView *renderScroll;
+
+
+//@property (nonatomic, strong, nonnull) NSArray *buttonsArray;
+
+@property (nonatomic, strong) NSMutableArray *indexArray;
+@property (nonatomic, strong, nonnull) NSMutableArray *statuArray;
 
 
 @end
@@ -69,23 +90,40 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    _buttonsArray = @[self.switchRenderButton,
-                      self.closeCameraButton,
-                      self.swichCameraButton,
-                      self.closeMicButton,
-                      self.switchReceiverButton,
-                      self.cancelInviteButton,
-                      self.endComButton
-                      ];
+//    _buttonsArray = @[self.switchRenderButton,
+//                      self.closeCameraButton,
+//                      self.swichCameraButton,
+//                      self.closeMicButton,
+//                      self.switchReceiverButton,
+//                      self.cancelInviteButton,
+//                      self.endComButton
+//                      ];
+    _indexArray = [[NSMutableArray alloc] init];
+    
+    _statuArray = [[NSMutableArray alloc] init];
     
     [self setEnableButton:NO];
+    
+    [self.view addSubview:self.renderScroll];
+    [self.view sendSubviewToBack:self.renderScroll];
+
+    
     [self makeCall];
     _myId = [[ILiveLoginManager getInstance] getLoginId];
-    
-    
 }
 
-
+- (UIScrollView *)renderScroll {
+    
+    if (!_renderScroll) {
+        _renderScroll = [[UIScrollView alloc] initWithFrame:CGRectMake(kRenderViewSpace,
+                                                                       kNaviHeight + kRenderViewSpace,
+                                                                       WIDTH - 2 * kRenderViewSpace,
+                                                                       kRenderViewHeight)
+                         ];
+    }
+    
+    return _renderScroll;
+}
 
 #pragma mark - 通话接口
 - (void)makeCall {
@@ -134,6 +172,8 @@
         }
         else{
              [ws setText:@"呼叫成功"];
+            
+            
         }
     }];
 }
@@ -239,6 +279,10 @@
     //    [self dismissViewControllerAnimated:YES completion:nil];
     NSLog(@"结束会议");
 }
+- (IBAction)btnViewClick:(id)sender {
+    
+    self.btnsView.hidden = YES;
+}
 
 #pragma mark - 音视频事件回调
 - (void)onMemberAudioOn:(BOOL)isOn members:(NSArray *)members
@@ -248,30 +292,81 @@
 
 - (void)onMemberCameraVideoOn:(BOOL)isOn members:(NSArray *)members
 {
+    NSString *myId = [[ILiveLoginManager getInstance] getLoginId];
+//    if(isOn){
+//        for (TILCallMember *member in members) {
+//            NSString *identifier = member.identifier;
+//            
+//            if([identifier isEqualToString:myId]){
+//                [_call addRenderFor:myId atFrame:self.view.bounds];
+//                [_call sendRenderViewToBack:myId];
+//            }
+//            else{
+//                NSInteger count = _indexArray.count;
+//                CGRect frame = [self getRenderFrame:count];
+//                [_call addRenderFor:identifier atFrame:frame];
+//                [_indexArray addObject:identifier];
+//                [_call bringRenderViewToFront:identifier];
+////                [self.view insertSubview:[_call getRenderFor:identifier] aboveSubview:[_call getRenderFor:myId]];
+//            }
+//        }
+//    }
+//    else{
+//        for (TILCallMember *member in members) {
+//            NSString *identifier = member.identifier;
+//            if([identifier isEqualToString:myId]){
+//                [_call removeRenderFor:identifier];
+//                if(_indexArray.count == 0){
+//                    NSString *firstIdentifier = _indexArray[0];
+//                    [_call modifyRenderView:self.view.bounds forIdentifier:firstIdentifier];
+//                    [_indexArray removeObject:firstIdentifier];
+//                }
+//            }
+//            else{
+//                [_call removeRenderFor:identifier];
+//                [_indexArray removeObject:identifier];
+//            }
+//        }
+//        [self updateRenderFrame];
+//    }
+
     if(isOn){
         for (TILCallMember *member in members) {
             NSString *identifier = member.identifier;
-            if([identifier isEqualToString:_myId]){
-                if([_call getCallStatus] == TILCALL_STATUS_CHATTING){
-                    [_call addRenderFor:identifier atFrame:CGRectMake(20, 20, 120, 160)];
+            
+            if (![self.indexArray containsObject:identifier]) {
+                [_call addRenderFor:identifier atFrame:CGRectZero];
+                
+                if ([identifier isEqualToString:myId]) {
+                    [self.indexArray insertObject:identifier atIndex:0];
+                    [self.statuArray insertObject:@"1" atIndex:0];
+                } else {
+                    [self.indexArray addObject:identifier];
+                    [self.statuArray addObject:@"0"];
                 }
-                else{
-                    [_call addRenderFor:identifier atFrame:self.view.bounds];
-                }
-                [_call bringRenderViewToFront:_myId];
-            }
-            else{
-                [_call modifyRenderView:CGRectMake(20, 20, 120, 160) forIdentifier:_myId];
-                [_call addRenderFor:identifier atFrame:self.view.bounds];
-                [_call sendRenderViewToBack:identifier];
             }
         }
+        
+        [self layoutRenderView];
+        [self reloadMemberScroll];
     }
     else{
         for (TILCallMember *member in members) {
             NSString *identifier = member.identifier;
-            [_call removeRenderFor:identifier];
+            if([identifier isEqualToString:myId]){
+                [_call removeRenderFor:identifier];
+                if(_indexArray.count == 0){
+                    NSString *firstIdentifier = _indexArray[0];
+                    [_call modifyRenderView:self.view.bounds forIdentifier:firstIdentifier];
+                    [_indexArray removeObject:firstIdentifier];
+                }
+            }
+            else{
+                [_call removeRenderFor:identifier];
+                [_indexArray removeObject:identifier];
+            }
         }
+        [self updateRenderFrame];
     }
 }
 
@@ -355,16 +450,96 @@
 
 
 #pragma mark - 界面管理
-- (void)setEnableButton:(BOOL)isMake {
 
-    for (UIButton *btn in self.buttonsArray) {
+- (void)layoutRenderView {
+    
+    for (UIView *subView in self.renderScroll.subviews) {
+        [subView removeFromSuperview];
+    }
+    
+    for (int i = 0; i < self.indexArray.count; i++) {
+        ILiveRenderView *rv = [_call getRenderFor:self.indexArray[i]];
+        rv.diffDirectionRenderMode = ILIVERENDERMODE_SCALEASPECTFILL;
+        CGRect frame = CGRectMake(i * (kRenderViewWidth + 10), 0, kRenderViewWidth, kRenderViewHeight);
+        rv.frame = frame;
+        [self.renderScroll addSubview:rv];
+
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapClick:)];
+        [rv addGestureRecognizer:tap];
         
-        btn.hidden = !isMake;
-        
-        if ([btn isEqual:self.cancelInviteButton]) {
-            btn.hidden = isMake;
+        if ([self.statuArray[i] isEqualToString:@"1"]) {
+            
+            ILiveRenderView *bgrv = [_call getRenderFor:self.indexArray[i]];
+            bgrv.diffDirectionRenderMode = ILIVERENDERMODE_SCALEASPECTFILL;
+            CGRect frame = self.view.bounds;
+            bgrv.frame = frame;
+            [self.view addSubview:bgrv];
+            [self.view sendSubviewToBack:bgrv];
         }
     }
+    
+    [self.numberButton setTitle:[NSString stringWithFormat:@"%lu", self.indexArray.count] forState:UIControlStateNormal];
+}
+
+- (void)tapClick:(UITapGestureRecognizer *)gesture {
+    
+    ILiveRenderView *rv = (id)gesture.view;
+    if ([NSStringFromCGSize(rv.frame.size) isEqualToString:
+        NSStringFromCGSize(self.view.frame.size)]) {
+        self.btnsView.hidden = NO;
+    }
+}
+
+
+- (CGRect)getRenderFrame:(NSInteger)count{
+    if(count == 3){
+        return CGRectZero;
+    }
+
+    CGFloat x = kRenderViewSpace + (count * (kRenderViewWidth + kRenderViewSpace));
+    CGFloat y = HEIGHT - kRenderViewSpace - kRenderViewHeight;
+    return CGRectMake(x, y, kRenderViewWidth, kRenderViewHeight);
+}
+
+- (void)updateRenderFrame{
+    for(NSInteger index = 0; index < _indexArray.count; index++){
+        CGRect frame = [self getRenderFrame:index];
+        NSString *identifier = _indexArray[index];
+        [_call modifyRenderView:frame forIdentifier:identifier];
+    }
+}
+
+- (void)setEnableButton:(BOOL)isMake {
+
+    self.cancelInviteButton.hidden = isMake;
+    self.btnsView.hidden = !isMake;
+//    for (UIButton *btn in self.buttonsArray) {
+//        
+//        btn.hidden = !isMake;
+//        
+//        if ([btn isEqual:self.cancelInviteButton]) {
+//            btn.hidden = isMake;
+//        }
+//    }
+}
+
+- (void)reloadMemberScroll {
+    
+    for (UIView *subView in self.memberScroll.subviews) {
+        [subView removeFromSuperview];
+    }
+    
+    for (int i = 0; i < self.indexArray.count; i++) {
+        UILabel *memberLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 50 * i, 40, 40)];
+        memberLabel.layer.cornerRadius = 20;
+        memberLabel.layer.masksToBounds = YES;
+        memberLabel.text = [CommonUtil getIconLabelStr:self.indexArray[i]];
+        memberLabel.textColor = [UIColor whiteColor];
+        memberLabel.backgroundColor = [UIColor greenColor];
+        memberLabel.textAlignment = 1;
+        [self.memberScroll addSubview:memberLabel];
+    }
+    
 }
 
 - (void)selfDismiss

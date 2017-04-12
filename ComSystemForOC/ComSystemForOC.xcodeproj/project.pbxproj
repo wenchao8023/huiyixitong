@@ -124,7 +124,6 @@
 		94ABD2D41E976B31007C1172 /* CommonUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ABD2D31E976B31007C1172 /* CommonUtil.m */; };
 		94ABD2D71E97A35E007C1172 /* CSOrderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ABD2D61E97A35E007C1172 /* CSOrderCell.m */; };
 		94ABD2DA1E97A58D007C1172 /* CSOrderModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ABD2D91E97A58D007C1172 /* CSOrderModel.m */; };
-		94BA6C681E9B591700C79B8C /* CSCallButtonsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 94BA6C671E9B591700C79B8C /* CSCallButtonsView.m */; };
 		94BA6C6E1E9B6EAB00C79B8C /* SelectedContactVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 94BA6C6D1E9B6EAB00C79B8C /* SelectedContactVC.m */; };
 		94BA6C711E9B71DD00C79B8C /* CSSelectedContactCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 94BA6C701E9B71DD00C79B8C /* CSSelectedContactCell.m */; };
 		94E4CD331E9628F500C3C6BF /* CSBaseRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 94E4CD321E9628F500C3C6BF /* CSBaseRequest.m */; };
@@ -363,8 +362,6 @@
 		94ABD2D61E97A35E007C1172 /* CSOrderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSOrderCell.m; sourceTree = "<group>"; };
 		94ABD2D81E97A58D007C1172 /* CSOrderModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSOrderModel.h; sourceTree = "<group>"; };
 		94ABD2D91E97A58D007C1172 /* CSOrderModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSOrderModel.m; sourceTree = "<group>"; };
-		94BA6C661E9B591700C79B8C /* CSCallButtonsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSCallButtonsView.h; sourceTree = "<group>"; };
-		94BA6C671E9B591700C79B8C /* CSCallButtonsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSCallButtonsView.m; sourceTree = "<group>"; };
 		94BA6C6C1E9B6EAB00C79B8C /* SelectedContactVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectedContactVC.h; sourceTree = "<group>"; };
 		94BA6C6D1E9B6EAB00C79B8C /* SelectedContactVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectedContactVC.m; sourceTree = "<group>"; };
 		94BA6C6F1E9B71DD00C79B8C /* CSSelectedContactCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSelectedContactCell.h; sourceTree = "<group>"; };
@@ -1038,8 +1035,6 @@
 			children = (
 				94ABD2C61E9736B3007C1172 /* CSMakeCallViewController.h */,
 				94ABD2C71E9736B3007C1172 /* CSMakeCallViewController.m */,
-				94BA6C661E9B591700C79B8C /* CSCallButtonsView.h */,
-				94BA6C671E9B591700C79B8C /* CSCallButtonsView.m */,
 			);
 			name = CSCallView;
 			sourceTree = "<group>";
@@ -1370,7 +1365,6 @@
 				944AF3681E94EB480044B44C /* CSFriendsCell.m in Sources */,
 				94E4CD571E963E7F00C3C6BF /* HostHeartBeatRequest.m in Sources */,
 				944AF2801E948FC00044B44C /* UserProtocolViewController.m in Sources */,
-				94BA6C681E9B591700C79B8C /* CSCallButtonsView.m in Sources */,
 				94E4CD9E1E963F0D00C3C6BF /* SetBeautyView.m in Sources */,
 				94BA6C6E1E9B6EAB00C79B8C /* SelectedContactVC.m in Sources */,
 				94E4CD981E963F0D00C3C6BF /* LiveUIParView.m in Sources */,

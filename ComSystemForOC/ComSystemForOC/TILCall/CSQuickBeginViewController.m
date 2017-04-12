@@ -46,6 +46,31 @@
 //}
 
 
+- (IBAction)callOfficephone:(id)sender {
+}
+
+
+- (IBAction)callVideophone:(id)sender {
+    
+}
+
+
+- (IBAction)callNetphone:(id)sender {
+    
+}
+
+
+- (IBAction)callTelephone:(id)sender {
+    
+    NSMutableString * str=[[NSMutableString alloc] initWithFormat:@"tel:%@",@"15889444427"];
+    UIWebView * callWebview = [[UIWebView alloc] init];
+    [callWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:str]]];
+    [self.view addSubview:callWebview];
+    
+//    NSMutableString * str=[[NSMutableString alloc] initWithFormat:@"telprompt://%@",@"15889444427"];
+//    //            NSLog(@"str======%@",str);
+//    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
+}
 
 
 - (void)didReceiveMemoryWarning {

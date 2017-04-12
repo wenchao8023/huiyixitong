@@ -6,6 +6,16 @@
 //  Copyright © 2017年 ibuildtek. All rights reserved.
 //
 
+
+
+
+
+#define WIDTH  [UIScreen mainScreen].bounds.size.width
+#define HEIGHT [UIScreen mainScreen].bounds.size.height
+
+static const kNaviHeight = 64;
+
+
 #ifndef CSHeaderFile_pch
 #define CSHeaderFile_pch
 

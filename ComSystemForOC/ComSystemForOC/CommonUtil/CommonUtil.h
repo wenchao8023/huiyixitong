@@ -14,4 +14,6 @@
 
 +(NSString *)getUserID ;
 
++(NSString *)getIconLabelStr:(NSString *)str ;
+
 @end
