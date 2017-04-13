@@ -8,16 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-typedef enum : NSInteger {
-    
-    CSCallComing_C2C = 120,
-    CSCallComing_mult
-    
-}CSCallComingType;
-
 @interface CSCallComingViewController : UIViewController
 
-@property (nonatomic, assign) CSCallComingType callComingType;
-
+@property (nonatomic, strong, nullable) TILCallInvitation *invitation;
 
 @end

@@ -17,7 +17,7 @@ static const int kRenderViewSpace = 10;
 
 @interface CSMakeCallViewController ()<TILCallNotificationListener,TILCallStatusListener, TILCallMemberEventListener>
 
-@property (nonatomic, strong) TILC2CCall *call;
+@property (nonatomic, strong) TILMultiCall *call;
 @property (nonatomic, strong) NSString *myId;
 
 /****** 设置按钮 ******
@@ -31,6 +31,11 @@ static const int kRenderViewSpace = 10;
  */
 @property (weak, nonatomic) IBOutlet UIButton *switchRenderButton;
 
+
+/**
+ 通话时长
+ */
+@property (weak, nonatomic) IBOutlet UILabel *durationLabel;
 
 @property (weak, nonatomic) IBOutlet UIView *btnsView;
 
@@ -73,31 +78,32 @@ static const int kRenderViewSpace = 10;
 
 
 
+
 @property (nonatomic, strong, nonnull) UIScrollView *renderScroll;
-
-
-//@property (nonatomic, strong, nonnull) NSArray *buttonsArray;
 
 @property (nonatomic, strong) NSMutableArray *indexArray;
 @property (nonatomic, strong, nonnull) NSMutableArray *statuArray;
+
+@property (nonatomic, assign) int duration;
+
+@property (nonatomic, strong, nullable) NSTimer *durationTimer;
 
 
 @end
 
 @implementation CSMakeCallViewController
 
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    self.inviterLabel.text = self.myId;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-//    _buttonsArray = @[self.switchRenderButton,
-//                      self.closeCameraButton,
-//                      self.swichCameraButton,
-//                      self.closeMicButton,
-//                      self.switchReceiverButton,
-//                      self.cancelInviteButton,
-//                      self.endComButton
-//                      ];
     _indexArray = [[NSMutableArray alloc] init];
     
     _statuArray = [[NSMutableArray alloc] init];
@@ -128,21 +134,17 @@ static const int kRenderViewSpace = 10;
 #pragma mark - 通话接口
 - (void)makeCall {
     
-    if (_callType == CSCall_c2c) {
-        [self makeCallC2C];
-        
-    } else {
-        [self makeCallMult];
-    }
+    [self makeCallMult];
 }
-#pragma mark -- 双人通话
--(void)makeCallC2C {
+
+#pragma mark -- 多人通话
+-(void)makeCallMult {
     
     TILCallConfig * config = [[TILCallConfig alloc] init];
     TILCallBaseConfig * baseConfig = [[TILCallBaseConfig alloc] init];
     baseConfig.callType = TILCALL_TYPE_VIDEO;
     baseConfig.isSponsor = YES;
-    baseConfig.peerId = _peerId;
+    baseConfig.memberArray = self.peerArray;
     baseConfig.heartBeatInterval = 15;
     config.baseConfig = baseConfig;
     
@@ -161,7 +163,7 @@ static const int kRenderViewSpace = 10;
     sponsorConfig.onlineInvite = YES;
     config.sponsorConfig = sponsorConfig;
     
-    _call = [[TILC2CCall alloc] initWithConfig:config];
+    _call = [[TILMultiCall alloc] initWithConfig:config];
     
     [_call createRenderViewIn:self.view];
     __weak typeof(self) ws = self;
@@ -171,15 +173,14 @@ static const int kRenderViewSpace = 10;
             [ws selfDismiss];
         }
         else{
-             [ws setText:@"呼叫成功"];
+            [ws setText:@"呼叫成功"];
+            [ws setEnableButton:YES];
             
+            self.duration = 0;
             
+            [self durationTimer];
         }
     }];
-}
-#pragma mark -- 多人通话
--(void)makeCallMult {
-    
 }
 
 - (IBAction)hangUp:(id)sender {
@@ -196,14 +197,16 @@ static const int kRenderViewSpace = 10;
     }];
 }
 
+// 取消所有通话
 - (IBAction)cancelInvite:(id)sender {
     
     __weak typeof(self) ws = self;
-    [_call cancelCall:^(TILCallError *err) {
-        if(err){
+    
+    [_call cancelAllCall:^(TILCallError *err) {
+        if (err) {
             [ws setText:[NSString stringWithFormat:@"取消通话邀请失败:%@-%d-%@",err.domain,err.code,err.errMsg]];
         }
-        else{
+        else {
             NSLog(@"取消通话邀请成功");
         }
         [ws selfDismiss];
@@ -218,24 +221,36 @@ static const int kRenderViewSpace = 10;
     cameraPos pos = [manager getCurCameraPos];
     __weak typeof(self) ws = self;
     [manager enableCamera:pos enable:!isOn succ:^{
-        NSString *text = !isOn?@"打开摄像头成功":@"关闭摄像头成功";
-        NSLog(@"%@", text);
-        [ws.closeCameraButton setTitle:(!isOn?@"关闭摄像头":@"打开摄像头") forState:UIControlStateNormal];
+        [ws.closeCameraButton setBackgroundImage:[UIImage imageNamed:(!isOn? @"shelu_b" : @"shelu")]
+                                        forState:UIControlStateNormal];
     }failed:^(NSString *moudle, int errId, NSString *errMsg) {
-        NSString *text = !isOn?@"打开摄像头失败":@"关闭摄像头失败";
-        [ws setText:[NSString stringWithFormat:@"%@:%@-%d-%@",text,moudle,errId,errMsg]];
     }];
 }
 
+//typedef NS_ENUM(NSInteger, cameraPos) {
+//    CameraPosFront = 0, ///< 前置摄像头
+//    CameraPosBack  = 1, ///< 后置摄像头
+//};
 - (IBAction)swithcCamera:(id)sender {
     
     ILiveRoomManager *manager = [ILiveRoomManager getInstance];
-    __weak typeof(self) ws = self;
-    [manager switchCamera:^{
-        [ws setText:@"切换摄像头成功"];
-    } failed:^(NSString *module, int errId, NSString *errMsg) {
-        [ws setText:[NSString stringWithFormat:@"切换摄像头失败:%@-%d-%@",module,errId,errMsg]];
-    }];
+    int pos = [manager getCurCameraPos];
+    
+    if (pos == -1) {
+        [self setText:@"摄像头没有打开"];
+    }
+    else {
+        __weak typeof(self) ws = self;
+        [manager switchCamera:^{
+            [ws setText:@"切换摄像头成功"];
+            [ws.swichCameraButton setBackgroundImage:[UIImage imageNamed:(pos == 1 ? @"zhuanhua" : @"zhuanhua_b")]
+                                            forState:UIControlStateNormal];
+        } failed:^(NSString *module, int errId, NSString *errMsg) {
+            [ws setText:[NSString stringWithFormat:@"切换摄像头失败:%@-%d-%@",module,errId,errMsg]];
+        }];
+    }
+    
+   
 }
 
 - (IBAction)closeMic:(id)sender {
@@ -246,7 +261,8 @@ static const int kRenderViewSpace = 10;
     [manager enableMic:!isOn succ:^{
         NSString *text = !isOn?@"打开麦克风成功":@"关闭麦克风成功";
         [ws setText:text];
-        [ws.closeMicButton setTitle:(!isOn?@"关闭麦":@"打开麦") forState:UIControlStateNormal];
+        [ws.closeMicButton setBackgroundImage:[UIImage imageNamed:(!isOn? @"jingyin_b" : @"jingyin")]
+                                        forState:UIControlStateNormal];
     } failed:^(NSString *moudle, int errId, NSString *errMsg) {
         NSString *text = !isOn?@"打开麦克风失败":@"关闭麦克风失败";
         [ws setText:[NSString stringWithFormat:@"%@:%@-%d-%@",text,moudle,errId,errMsg]];
@@ -260,7 +276,9 @@ static const int kRenderViewSpace = 10;
     __weak typeof(self) ws = self;
     QAVOutputMode mode = [manager getCurAudioMode];
     [ws setText:(mode == QAVOUTPUTMODE_EARPHONE?@"切换扬声器成功":@"切换到听筒成功")];
-    [ws.switchReceiverButton setTitle:(mode == QAVOUTPUTMODE_EARPHONE?@"免提关":@"免提开") forState:UIControlStateNormal];
+//    [ws.switchReceiverButton setTitle:(mode == QAVOUTPUTMODE_EARPHONE?@"免提开":@"免提关") forState:UIControlStateNormal];
+    [ws.switchReceiverButton setBackgroundImage:[UIImage imageNamed:(mode == QAVOUTPUTMODE_EARPHONE?@"mianti_b" : @"mianti")]
+                                 forState:UIControlStateNormal];
     if(mode == QAVOUTPUTMODE_EARPHONE){
         [manager setAudioMode:QAVOUTPUTMODE_SPEAKER];
     }
@@ -271,7 +289,7 @@ static const int kRenderViewSpace = 10;
 
 
 - (IBAction)switchRenderView:(id)sender {
-     [_call switchRenderView:_peerId with:_myId];
+//     [_call switchRenderView:_peerId with:_myId];
 }
 
 - (IBAction)backClick:(id)sender {
@@ -293,43 +311,21 @@ static const int kRenderViewSpace = 10;
 - (void)onMemberCameraVideoOn:(BOOL)isOn members:(NSArray *)members
 {
     NSString *myId = [[ILiveLoginManager getInstance] getLoginId];
-//    if(isOn){
-//        for (TILCallMember *member in members) {
-//            NSString *identifier = member.identifier;
-//            
-//            if([identifier isEqualToString:myId]){
-//                [_call addRenderFor:myId atFrame:self.view.bounds];
-//                [_call sendRenderViewToBack:myId];
-//            }
-//            else{
-//                NSInteger count = _indexArray.count;
-//                CGRect frame = [self getRenderFrame:count];
-//                [_call addRenderFor:identifier atFrame:frame];
-//                [_indexArray addObject:identifier];
-//                [_call bringRenderViewToFront:identifier];
-////                [self.view insertSubview:[_call getRenderFor:identifier] aboveSubview:[_call getRenderFor:myId]];
-//            }
-//        }
-//    }
-//    else{
-//        for (TILCallMember *member in members) {
-//            NSString *identifier = member.identifier;
-//            if([identifier isEqualToString:myId]){
-//                [_call removeRenderFor:identifier];
-//                if(_indexArray.count == 0){
-//                    NSString *firstIdentifier = _indexArray[0];
-//                    [_call modifyRenderView:self.view.bounds forIdentifier:firstIdentifier];
-//                    [_indexArray removeObject:firstIdentifier];
-//                }
-//            }
-//            else{
-//                [_call removeRenderFor:identifier];
-//                [_indexArray removeObject:identifier];
-//            }
-//        }
-//        [self updateRenderFrame];
-//    }
 
+//    for (TILCallMember *member in members) {
+//        NSString *identifier = member.identifier;
+//        if([identifier isEqualToString:myId]){
+//            [_call addRenderFor:myId atFrame:self.view.bounds];
+//            [_call sendRenderViewToBack:myId];
+//        }
+//        else{
+//            NSInteger count = _indexArray.count;
+//            CGRect frame = [self getRenderFrame:count];
+//            [_call addRenderFor:identifier atFrame:frame];
+//            [_indexArray addObject:identifier];
+//        }
+//    }
+    
     if(isOn){
         for (TILCallMember *member in members) {
             NSString *identifier = member.identifier;
@@ -353,20 +349,9 @@ static const int kRenderViewSpace = 10;
     else{
         for (TILCallMember *member in members) {
             NSString *identifier = member.identifier;
-            if([identifier isEqualToString:myId]){
-                [_call removeRenderFor:identifier];
-                if(_indexArray.count == 0){
-                    NSString *firstIdentifier = _indexArray[0];
-                    [_call modifyRenderView:self.view.bounds forIdentifier:firstIdentifier];
-                    [_indexArray removeObject:firstIdentifier];
-                }
-            }
-            else{
-                [_call removeRenderFor:identifier];
-                [_indexArray removeObject:identifier];
-            }
+            [_call removeRenderFor:identifier];
+            [_indexArray removeObject:identifier];
         }
-        [self updateRenderFrame];
     }
 }
 
@@ -389,64 +374,107 @@ static const int kRenderViewSpace = 10;
     
     NSInteger notifId = notify.notifId;
     NSString *sender = notify.sender;
+    NSString *target = [notify.targets componentsJoinedByString:@";"];
+    NSString *myId = [[ILiveLoginManager getInstance] getLoginId];
     switch (notifId) {
+        case TILCALL_NOTIF_INVITE:
+            [self setText:[NSString stringWithFormat:@"%@邀请%@通话",sender,target]];
+            break;
         case TILCALL_NOTIF_ACCEPTED:
-            [self setText:@"通话建立成功"];
-            [self setEnableButton:YES];
+            [self setText:[NSString stringWithFormat:@"%@接受了%@的邀请",sender,target]];
+//            [self setButtonEnable:YES];
+            break;
+        case TILCALL_NOTIF_CANCEL:
+        {
+            [self setText:[NSString stringWithFormat:@"%@取消了对%@的邀请",sender,target]];
+            if([notify.targets containsObject:myId]){
+                [self selfDismiss];
+            }
+        }
             break;
         case TILCALL_NOTIF_TIMEOUT:
-            [self setText:@"对方没有接听"];
-            [self selfDismiss];
+        {
+            if([sender isEqualToString:myId]){
+                [self setText:[NSString stringWithFormat:@"%@呼叫超时",sender]];
+                [self selfDismiss];
+            }
+            else{
+                [self setText:[NSString stringWithFormat:@"%@手机可能不在身边",sender]];
+            }
+        }
             break;
         case TILCALL_NOTIF_REFUSE:
-            [self setText:@"对方拒绝接听"];
-            [self selfDismiss];
+            [self setText:[NSString stringWithFormat:@"%@拒绝了%@的邀请",sender,target]];
             break;
         case TILCALL_NOTIF_HANGUP:
-            [self setText:@"对方已挂断"];
-            [self selfDismiss];
+            [self setText:[NSString stringWithFormat:@"%@挂断了%@邀请的通话",sender,target]];
             break;
         case TILCALL_NOTIF_LINEBUSY:
-            [self setText:@"对方占线"];
-            [self selfDismiss];
+            [self setText:[NSString stringWithFormat:@"%@占线，无法接受%@的邀请",sender,target]];
             break;
         case TILCALL_NOTIF_HEARTBEAT:
             [self setText:[NSString stringWithFormat:@"%@发来心跳",sender]];
             break;
         case TILCALL_NOTIF_DISCONNECT:
-            [self setText:@"对方失去连接"];
-            [self selfDismiss];
+        {
+            [self setText:[NSString stringWithFormat:@"%@失去连接",sender]];
+            if([sender isEqualToString:myId]){
+                [self selfDismiss];
+            }
+        }
             break;
         default:
             break;
     }
 }
 
-#pragma mark - 通话状态事件回调
-//- (void)onCallEstablish{
-//    [self setText:@"通话建立成功"];
-//    [self setEnableButton:YES];
-//}
-//
-//- (void)onCallEnd:(TILCallEndCode)code{
-//    switch (code) {
-//        case TILCALL_END_SPONSOR_TIMEOUT:
-//            [self setText:@"对方没有接听"];
-//            break;
-//        case TILCALL_END_RESPONDER_REFUSE:
-//            [self setText:@"接受方已拒绝"];
-//            break;
-//        case TILCALL_END_PEER_HANGUP:
-//            [self setText:@"对方已挂断"];
-//            break;
-//        case TILCALL_END_RESPONDER_LINEBUSY:
-//            [self setText:@"对方正忙"];
-//            break;
-//        default:
-//            break;
-//    }
-//    [self selfDismiss];
-//}
+#pragma mark - 通话状态回调
+- (void)onCallEstablish {
+    [self setText:@"建立通话成功"];
+
+    self.duration = 0;
+    
+    [self durationTimer];
+}
+
+- (NSTimer *)durationTimer {
+    
+    if (!_durationTimer) {
+        _durationTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(configDuration) userInfo:nil repeats:YES];
+        
+        [_durationTimer fire];
+    }
+    
+    return _durationTimer;
+}
+
+- (void)configDuration {
+    
+    self.duration++;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.durationLabel.text = [self getDurationStr];
+    });
+}
+
+- (NSString *)getDurationStr {
+    
+    if (self.duration < 60) {
+        return [NSString stringWithFormat:@"00:%02d", self.duration];
+    }
+    else if (self.duration < 3600) {
+        return [NSString stringWithFormat:@"%02d:%02d", self.duration / 60, self.duration % 60];
+    }
+    else {
+        return [NSString stringWithFormat:@"%d:%02d:%02d", self.duration / 3600, (self.duration % 3600) / 60, (self.duration % 3600) % 60];
+    }
+}
+
+
+- (void)onCallEnd:(TILCallEndCode)code {
+    
+    [self setText:[NSString stringWithFormat:@"通话结束, 原因 : %d", code]];
+}
 
 
 #pragma mark - 界面管理
@@ -478,7 +506,8 @@ static const int kRenderViewSpace = 10;
         }
     }
     
-    [self.numberButton setTitle:[NSString stringWithFormat:@"%lu", self.indexArray.count] forState:UIControlStateNormal];
+    
+    [self.numberButton setBackgroundImage:[UIImage imageNamed:[NSString stringWithFormat:@"number%d", self.indexArray.count]] forState:UIControlStateNormal];
 }
 
 - (void)tapClick:(UITapGestureRecognizer *)gesture {
@@ -497,7 +526,7 @@ static const int kRenderViewSpace = 10;
     }
 
     CGFloat x = kRenderViewSpace + (count * (kRenderViewWidth + kRenderViewSpace));
-    CGFloat y = HEIGHT - kRenderViewSpace - kRenderViewHeight;
+    CGFloat y = kRenderViewSpace;
     return CGRectMake(x, y, kRenderViewWidth, kRenderViewHeight);
 }
 
@@ -513,14 +542,6 @@ static const int kRenderViewSpace = 10;
 
     self.cancelInviteButton.hidden = isMake;
     self.btnsView.hidden = !isMake;
-//    for (UIButton *btn in self.buttonsArray) {
-//        
-//        btn.hidden = !isMake;
-//        
-//        if ([btn isEqual:self.cancelInviteButton]) {
-//            btn.hidden = isMake;
-//        }
-//    }
 }
 
 - (void)reloadMemberScroll {

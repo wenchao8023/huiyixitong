@@ -17,21 +17,14 @@ typedef enum : NSInteger {
     
 }CSBeginType;
 
-typedef enum : NSInteger {
-    
-    CSCall_c2c = 110,
-    CSCall_mult
-    
-}CSCallType;
 
 
 @interface CSMakeCallViewController : UIViewController
 {
     CSBeginType _beginType;
-    CSCallType _callType;
 }
 
-@property (nonatomic, copy, nullable) NSString *peerId;
+//@property (nonatomic, copy, nullable) NSString *peerId;
 
 @property (nonatomic, strong, nullable) NSArray *peerArray;
 

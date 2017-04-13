@@ -188,36 +188,23 @@
 //    NSLog(@"确认");
 //}
 
+-(BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
+    
+    return self.selectArray.count;
+}
+
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
     NSLog(@"segue indentifier is : %@", segue.identifier);
-    
-    
-    NSUInteger selectNumbers = self.selectArray.count;
-
-    if (selectNumbers <= 0) {
-        
-        segue = nil;
-        sender = nil;
-        return ;
-        
-    }
     
     if ([segue.identifier isEqualToString:@"FriendMakeCall"]) {
         
         UIViewController *destinationController = [segue destinationViewController];
         
-        if (selectNumbers == 1) {
-            [destinationController setValue:@102 forKey:@"_beginType"];
-            [destinationController setValue:@110 forKey:@"_callType"];
-            [destinationController setValue:([[self.selectArray firstObject] isEqualToString:self.nickName] ? [self.selectArray lastObject] : [self.selectArray firstObject])
-                                     forKey:@"peerId"];
-            
-        } else {
-            [destinationController setValue:@102 forKey:@"_beginType"];
-            [destinationController setValue:@111 forKey:@"_callType"];
-            [destinationController setValue:self.selectArray forKey:@"peerArray"];
-        }
+            [destinationController setValue:@102
+                                     forKey:@"_beginType"];
+            [destinationController setValue:self.selectArray
+                                     forKey:@"peerArray"];
     }
     
     if ([segue.identifier isEqualToString:@"showSelectedContact"]) {
