@@ -9,8 +9,8 @@
 #import "CSMakeCallViewController.h"
 
 
-static const int kRenderViewHeight = 160;
-static const int kRenderViewWidth  = kRenderViewHeight * 3 / 4;
+static  int kRenderViewHeight = 160;
+static  int kRenderViewWidth  = 0;
 static const int kRenderViewSpace = 10;
 
 
@@ -77,16 +77,20 @@ static const int kRenderViewSpace = 10;
 @property (weak, nonatomic) IBOutlet UIScrollView *memberScroll;
 
 
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *btnViewTopSpace;
 
 
 @property (nonatomic, strong, nonnull) UIScrollView *renderScroll;
 
-@property (nonatomic, strong) NSMutableArray *indexArray;
-@property (nonatomic, strong, nonnull) NSMutableArray *statuArray;
+@property (nonatomic, strong, nonnull) NSMutableArray *membersArray;    //记录房间通话的成员
+@property (nonatomic, strong) NSMutableArray *indexArray;               //记录房间中开启视频的成员
+@property (nonatomic, strong, nonnull) NSMutableArray *statuArray;      //记录房间中视频流处在背景视图的成员
+
 
 @property (nonatomic, assign) int duration;
-
 @property (nonatomic, strong, nullable) NSTimer *durationTimer;
+
+
 
 
 @end
@@ -103,6 +107,19 @@ static const int kRenderViewSpace = 10;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    self.btnViewTopSpace.constant = 0;
+    
+    if (self.view.bounds.size.height < 1000) {
+        kRenderViewHeight = 120;
+        kRenderViewWidth = kRenderViewHeight * 3 / 4;
+    }
+    else {
+        kRenderViewHeight = 160;
+        kRenderViewWidth = kRenderViewHeight * 3 / 4;
+    }
+    
+    _membersArray = [NSMutableArray arrayWithCapacity:0];
     
     _indexArray = [[NSMutableArray alloc] init];
     
@@ -148,17 +165,15 @@ static const int kRenderViewSpace = 10;
     baseConfig.heartBeatInterval = 15;
     config.baseConfig = baseConfig;
     
+    
     TILCallListener * listener = [[TILCallListener alloc] init];
-    //注意：
-    //［通知回调］可以获取通话的事件通知，建议双人和多人都走notifListener
-    // [通话状态回调] 也可以获取通话的事件通知
-    listener.callStatusListener = self;
     listener.memberEventListener = self;
     listener.notifListener = self;
     
     config.callListener = listener;
+    
     TILCallSponsorConfig *sponsorConfig = [[TILCallSponsorConfig alloc] init];
-    sponsorConfig.waitLimit = 0;
+    sponsorConfig.waitLimit = 10;
     sponsorConfig.callId = (int)([[NSDate date] timeIntervalSince1970]) % 1000 * 1000 + arc4random() % 1000;
     sponsorConfig.onlineInvite = YES;
     config.sponsorConfig = sponsorConfig;
@@ -167,21 +182,27 @@ static const int kRenderViewSpace = 10;
     
     [_call createRenderViewIn:self.view];
     __weak typeof(self) ws = self;
-    [_call makeCall:@"callTips" custom:@"callCustom" result:^(TILCallError *err) {
+    [_call makeCall:nil custom:nil result:^(TILCallError *err) {
         if(err){
             [ws setText:[NSString stringWithFormat:@"呼叫失败:%@-%d-%@",err.domain,err.code,err.errMsg]];
             [ws selfDismiss];
         }
         else{
             [ws setText:@"呼叫成功"];
+            
             [ws setEnableButton:YES];
             
             self.duration = 0;
             
             [self durationTimer];
+            
+            [self resetButtonsView];
+            
+            [self reloadMemberScroll];
         }
     }];
 }
+
 
 - (IBAction)hangUp:(id)sender {
     
@@ -221,7 +242,7 @@ static const int kRenderViewSpace = 10;
     cameraPos pos = [manager getCurCameraPos];
     __weak typeof(self) ws = self;
     [manager enableCamera:pos enable:!isOn succ:^{
-        [ws.closeCameraButton setBackgroundImage:[UIImage imageNamed:(!isOn? @"shelu_b" : @"shelu")]
+        [ws.closeCameraButton setBackgroundImage:[UIImage imageNamed:(!isOn ? @"shelu_b" : @"shelu")]
                                         forState:UIControlStateNormal];
     }failed:^(NSString *moudle, int errId, NSString *errMsg) {
     }];
@@ -243,14 +264,12 @@ static const int kRenderViewSpace = 10;
         __weak typeof(self) ws = self;
         [manager switchCamera:^{
             [ws setText:@"切换摄像头成功"];
-            [ws.swichCameraButton setBackgroundImage:[UIImage imageNamed:(pos == 1 ? @"zhuanhua" : @"zhuanhua_b")]
+            [ws.swichCameraButton setBackgroundImage:[UIImage imageNamed:(!pos? @"zhuanhua_b" : @"zhuanhua")]
                                             forState:UIControlStateNormal];
         } failed:^(NSString *module, int errId, NSString *errMsg) {
             [ws setText:[NSString stringWithFormat:@"切换摄像头失败:%@-%d-%@",module,errId,errMsg]];
         }];
     }
-    
-   
 }
 
 - (IBAction)closeMic:(id)sender {
@@ -259,9 +278,9 @@ static const int kRenderViewSpace = 10;
     BOOL isOn = [manager getCurMicState];
     __weak typeof(self) ws = self;
     [manager enableMic:!isOn succ:^{
-        NSString *text = !isOn?@"打开麦克风成功":@"关闭麦克风成功";
+        NSString *text = !isOn ? @"打开麦克风成功" : @"关闭麦克风成功";
         [ws setText:text];
-        [ws.closeMicButton setBackgroundImage:[UIImage imageNamed:(!isOn? @"jingyin_b" : @"jingyin")]
+        [ws.closeMicButton setBackgroundImage:[UIImage imageNamed:(isOn? @"jingyin_b" : @"jingyin")]
                                         forState:UIControlStateNormal];
     } failed:^(NSString *moudle, int errId, NSString *errMsg) {
         NSString *text = !isOn?@"打开麦克风失败":@"关闭麦克风失败";
@@ -276,7 +295,7 @@ static const int kRenderViewSpace = 10;
     __weak typeof(self) ws = self;
     QAVOutputMode mode = [manager getCurAudioMode];
     [ws setText:(mode == QAVOUTPUTMODE_EARPHONE?@"切换扬声器成功":@"切换到听筒成功")];
-//    [ws.switchReceiverButton setTitle:(mode == QAVOUTPUTMODE_EARPHONE?@"免提开":@"免提关") forState:UIControlStateNormal];
+
     [ws.switchReceiverButton setBackgroundImage:[UIImage imageNamed:(mode == QAVOUTPUTMODE_EARPHONE?@"mianti_b" : @"mianti")]
                                  forState:UIControlStateNormal];
     if(mode == QAVOUTPUTMODE_EARPHONE){
@@ -288,15 +307,25 @@ static const int kRenderViewSpace = 10;
 }
 
 
+/**
+ 隐藏 renderView
+ */
 - (IBAction)switchRenderView:(id)sender {
-//     [_call switchRenderView:_peerId with:_myId];
+    
+    BOOL flag = self.renderScroll.isHidden;
+    
+    if (!flag) {
+        self.btnsView.hidden = !flag;
+        [self.switchRenderButton setBackgroundImage:[UIImage imageNamed:@"quanping_b"] forState:UIControlStateNormal];
+    }
+    else {
+        [self.switchRenderButton setBackgroundImage:[UIImage imageNamed:@"quanping"] forState:UIControlStateNormal];
+    }
+    
+    self.renderScroll.hidden = !flag;
 }
 
-- (IBAction)backClick:(id)sender {
-    
-    //    [self dismissViewControllerAnimated:YES completion:nil];
-    NSLog(@"结束会议");
-}
+
 - (IBAction)btnViewClick:(id)sender {
     
     self.btnsView.hidden = YES;
@@ -312,22 +341,9 @@ static const int kRenderViewSpace = 10;
 {
     NSString *myId = [[ILiveLoginManager getInstance] getLoginId];
 
-//    for (TILCallMember *member in members) {
-//        NSString *identifier = member.identifier;
-//        if([identifier isEqualToString:myId]){
-//            [_call addRenderFor:myId atFrame:self.view.bounds];
-//            [_call sendRenderViewToBack:myId];
-//        }
-//        else{
-//            NSInteger count = _indexArray.count;
-//            CGRect frame = [self getRenderFrame:count];
-//            [_call addRenderFor:identifier atFrame:frame];
-//            [_indexArray addObject:identifier];
-//        }
-//    }
-    
     if(isOn){
         for (TILCallMember *member in members) {
+            
             NSString *identifier = member.identifier;
             
             if (![self.indexArray containsObject:identifier]) {
@@ -342,17 +358,32 @@ static const int kRenderViewSpace = 10;
                 }
             }
         }
-        
-        [self layoutRenderView];
-        [self reloadMemberScroll];
     }
     else{
         for (TILCallMember *member in members) {
+            
             NSString *identifier = member.identifier;
+            
+            NSInteger curIndex = [self.indexArray indexOfObject:identifier];
+            
             [_call removeRenderFor:identifier];
-            [_indexArray removeObject:identifier];
+            [self.indexArray removeObject:identifier];
+
+            if ([self.statuArray[curIndex] isEqualToString:@"1"]) {
+                if (curIndex == 0) {
+                    [self.statuArray exchangeObjectAtIndex:curIndex withObjectAtIndex:1];
+                }
+                else {
+                    [self.statuArray exchangeObjectAtIndex:curIndex withObjectAtIndex:0];
+                }
+            }
+            
+            [self.statuArray removeObjectAtIndex:curIndex];
         }
     }
+    
+    [self layoutRenderView];
+    [self reloadMemberScroll];
 }
 
 
@@ -428,15 +459,6 @@ static const int kRenderViewSpace = 10;
     }
 }
 
-#pragma mark - 通话状态回调
-- (void)onCallEstablish {
-    [self setText:@"建立通话成功"];
-
-    self.duration = 0;
-    
-    [self durationTimer];
-}
-
 - (NSTimer *)durationTimer {
     
     if (!_durationTimer) {
@@ -471,32 +493,34 @@ static const int kRenderViewSpace = 10;
 }
 
 
-- (void)onCallEnd:(TILCallEndCode)code {
-    
-    [self setText:[NSString stringWithFormat:@"通话结束, 原因 : %d", code]];
-}
-
 
 #pragma mark - 界面管理
 
+/**
+ 设置窗口
+ */
 - (void)layoutRenderView {
     
     for (UIView *subView in self.renderScroll.subviews) {
         [subView removeFromSuperview];
     }
     
+    NSInteger bgIndex = [self.statuArray indexOfObject:@"1"];
+    
     for (int i = 0; i < self.indexArray.count; i++) {
+        
         ILiveRenderView *rv = [_call getRenderFor:self.indexArray[i]];
         rv.diffDirectionRenderMode = ILIVERENDERMODE_SCALEASPECTFILL;
-        CGRect frame = CGRectMake(i * (kRenderViewWidth + 10), 0, kRenderViewWidth, kRenderViewHeight);
-        rv.frame = frame;
-        [self.renderScroll addSubview:rv];
-
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapClick:)];
         [rv addGestureRecognizer:tap];
         
-        if ([self.statuArray[i] isEqualToString:@"1"]) {
+        if (i < bgIndex) {
             
+            CGRect frame = CGRectMake(i * (kRenderViewWidth + 10), 0, kRenderViewWidth, kRenderViewHeight);
+            rv.frame = frame;
+            [self.renderScroll addSubview:rv];
+        }
+        else if (i == bgIndex) {
             ILiveRenderView *bgrv = [_call getRenderFor:self.indexArray[i]];
             bgrv.diffDirectionRenderMode = ILIVERENDERMODE_SCALEASPECTFILL;
             CGRect frame = self.view.bounds;
@@ -504,8 +528,14 @@ static const int kRenderViewSpace = 10;
             [self.view addSubview:bgrv];
             [self.view sendSubviewToBack:bgrv];
         }
+        else {
+            ILiveRenderView *rv = [_call getRenderFor:self.indexArray[i]];
+            rv.diffDirectionRenderMode = ILIVERENDERMODE_SCALEASPECTFILL;
+            CGRect frame = CGRectMake((i - 1) * (kRenderViewWidth + 10), 0, kRenderViewWidth, kRenderViewHeight);
+            rv.frame = frame;
+            [self.renderScroll addSubview:rv];
+        }
     }
-    
     
     [self.numberButton setBackgroundImage:[UIImage imageNamed:[NSString stringWithFormat:@"number%d", self.indexArray.count]] forState:UIControlStateNormal];
 }
@@ -516,6 +546,10 @@ static const int kRenderViewSpace = 10;
     if ([NSStringFromCGSize(rv.frame.size) isEqualToString:
         NSStringFromCGSize(self.view.frame.size)]) {
         self.btnsView.hidden = NO;
+    }
+    else {
+        CGFloat y = rv.frame.origin.y;
+        printf("y == %f", y);
     }
 }
 
@@ -538,31 +572,67 @@ static const int kRenderViewSpace = 10;
     }
 }
 
+/**
+ 显示按钮
+
+ @param isMake 以取消按钮是否显示为准
+ */
 - (void)setEnableButton:(BOOL)isMake {
 
     self.cancelInviteButton.hidden = isMake;
     self.btnsView.hidden = !isMake;
 }
 
+/**
+ 设置窗口视图
+ */
 - (void)reloadMemberScroll {
+    
+    [self.membersArray removeAllObjects];
+    [self.membersArray addObjectsFromArray:[_call getMembers]];
     
     for (UIView *subView in self.memberScroll.subviews) {
         [subView removeFromSuperview];
     }
     
-    for (int i = 0; i < self.indexArray.count; i++) {
+    for (int i = 0; i < self.membersArray.count; i++) {
+        TILCallMember *member = self.membersArray[i];
+        NSString *identifier = member.identifier;
+        
         UILabel *memberLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 50 * i, 40, 40)];
         memberLabel.layer.cornerRadius = 20;
         memberLabel.layer.masksToBounds = YES;
-        memberLabel.text = [CommonUtil getIconLabelStr:self.indexArray[i]];
+        memberLabel.text = [CommonUtil getIconLabelStr:identifier];
         memberLabel.textColor = [UIColor whiteColor];
-        memberLabel.backgroundColor = [UIColor greenColor];
+        memberLabel.backgroundColor = [UIColor colorWithRed:33 green:70 blue:93 alpha:1];
         memberLabel.textAlignment = 1;
         [self.memberScroll addSubview:memberLabel];
+        
+        UIImageView *image = [[UIImageView alloc] initWithFrame:CGRectMake(0 + 20, 50 * i + 20, 22, 22)];
+        [self.memberScroll addSubview:image];
+        image.image = [UIImage imageNamed:[self.indexArray containsObject:identifier] ? @"cameryOn" : @"cameryOff"];
     }
-    
 }
 
+/**
+ 设置按钮视图图片
+ */
+- (void)resetButtonsView {
+    
+    ILiveRoomManager *manager = [ILiveRoomManager getInstance];
+    
+    [self.closeCameraButton setBackgroundImage:[UIImage imageNamed:(![manager getCurCameraState]?  @"shelu_b" : @"shelu")]
+                                    forState:UIControlStateNormal];
+    
+    [self.swichCameraButton setBackgroundImage:[UIImage imageNamed:([manager getCurCameraPos] ? @"zhuanhua_b" : @"zhuanhua")]
+                                    forState:UIControlStateNormal];
+    
+    [self.closeMicButton setBackgroundImage:[UIImage imageNamed:(![manager getCurMicState]? @"jingyin_b" : @"jingyin")]
+                                 forState:UIControlStateNormal];
+    
+    [self.switchReceiverButton setBackgroundImage:[UIImage imageNamed:([manager getCurAudioMode] == QAVOUTPUTMODE_SPEAKER  ? @"mianti_b" : @"mianti_b")]
+                                       forState:UIControlStateNormal];
+}
 - (void)selfDismiss
 {
     __weak typeof(self) ws = self;

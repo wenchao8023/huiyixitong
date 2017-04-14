@@ -21,6 +21,8 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
+
+
 @property (nonatomic, nonnull, strong) NSMutableArray *dataArray;
 
 @property (nonatomic, nonnull, strong) NSMutableArray *statuArray;
@@ -64,7 +66,7 @@
     
     self.nickName = [CommonUtil getUserID];
     
-    [self.dataArray addObjectsFromArray:@[@"Aaaaaaaa", @"Bbbbbbbb", @"Cccccccc", @"Dddddddd", @"Eee", @"F", @"Gg"]];
+    [self.dataArray addObjectsFromArray:@[@"Aaaaaaaa", @"Bbbbbbbb", @"Cccccccc", @"Dddddddd", @"Eee", @"F", @"Gg", @"RNG"]];
     
     for (NSString *nameStr in self.dataArray) {
         if ([nameStr isEqualToString:self.nickName]) {    //刚进来的时候，只有自己是选择的，如果是快速开始就不是的，这里要根据需求设计
