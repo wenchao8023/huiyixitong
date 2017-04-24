@@ -16,4 +16,13 @@
 
 +(NSString *)getIconLabelStr:(NSString *)str ;
 
+// 文字模糊背景
+// 默认：白色文字、黑色模糊
+// 文字默认 16
++(NSMutableAttributedString *)getShadowStr:(NSString *)str ;
+
++(NSMutableAttributedString *)getShadowStr:(NSString *)str font:(CGFloat)font ;
+
++(NSMutableAttributedString *)getShadowStr:(NSString *)str textColor:(UIColor *)textColor shadowColor:(UIColor *)shadowColor ;
+
 @end
