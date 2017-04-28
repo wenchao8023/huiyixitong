@@ -8,8 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-@interface RenderViewModel : NSObject
 
-@property (nonatomic, strong, nullable) TILCallInvitation *invita;
+
+
+@interface RenderViewModel : NSObject<SMKViewModelProtocol, SMKViewMangerProtocol>
+
+@property (nonatomic, strong, nullable) TILCallInvitation *invite;
 
 @end

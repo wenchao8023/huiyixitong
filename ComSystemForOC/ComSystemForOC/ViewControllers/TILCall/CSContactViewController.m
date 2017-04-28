@@ -179,11 +179,16 @@
 
 -(BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
     
-    if ([identifier isEqualToString:@"FriendMakeCall"] ||
+//    if ([identifier isEqualToString:@"FriendMakeCall"] ||
+//        [identifier isEqualToString:@"showSelectedContact"]) {
+//        return self.selectArray.count;
+//    }
+
+    if ([identifier isEqualToString:@"ContactMakeCall"] ||
         [identifier isEqualToString:@"showSelectedContact"]) {
         return self.selectArray.count;
     }
-    
+
     return YES;
 }
 
@@ -199,6 +204,16 @@
                                      forKey:@"_beginType"];
             [destinationController setValue:self.selectArray
                                      forKey:@"peerArray"];
+    }
+    
+    if ([segue.identifier isEqualToString:@"ContactMakeCall"]) {
+        
+        UIViewController *destinationController = [segue destinationViewController];
+//        
+//        [destinationController setValue:@102
+//                                 forKey:@"_beginType"];
+//        [destinationController setValue:self.selectArray
+//                                 forKey:@"peerArray"];
     }
     
     if ([segue.identifier isEqualToString:@"showSelectedContact"]) {

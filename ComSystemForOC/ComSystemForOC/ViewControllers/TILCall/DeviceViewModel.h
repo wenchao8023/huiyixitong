@@ -8,6 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-@interface DeviceViewModel : NSObject
+@interface DeviceViewModel : NSObject<SMKViewModelProtocol, SMKViewMangerProtocol>
 
 @end

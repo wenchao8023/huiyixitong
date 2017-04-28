@@ -418,7 +418,7 @@
                 <tapGestureRecognizer id="BQq-In-z96">
                     <connections>
                         <action selector="clickConfirm:" destination="Qfx-tF-THM" id="5rm-iA-uMg"/>
-                        <segue destination="vEX-zs-Giq" kind="show" identifier="FriendMakeCall" action="showDetailViewController:sender:" id="0Hq-bz-Aay"/>
+                        <segue destination="uab-tT-rCB" kind="showDetail" identifier="ContactMakeCall" id="QN9-to-33c"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
@@ -462,7 +462,7 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     </scrollView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SHZ-fp-dhz">
-                                        <rect key="frame" x="305" y="270.5" width="60" height="60"/>
+                                        <rect key="frame" x="305" y="271" width="60" height="60"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <state key="normal" backgroundImage="mianti.png">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -478,7 +478,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Drr-sr-PqR">
-                                        <rect key="frame" x="305" y="180.5" width="60" height="60"/>
+                                        <rect key="frame" x="305" y="181" width="60" height="60"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <state key="normal" backgroundImage="jingyin.png">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -510,21 +510,21 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="静音" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PFt-XN-jI6">
-                                        <rect key="frame" x="300" y="240.5" width="70" height="20"/>
+                                        <rect key="frame" x="300" y="241" width="70" height="20"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                         <color key="shadowColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="切换摄像头" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sXg-DH-YcY">
-                                        <rect key="frame" x="300" y="150" width="70" height="20.5"/>
+                                        <rect key="frame" x="300" y="150" width="70" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                         <color key="shadowColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="关闭摄像头" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RaL-Sl-1Fk">
-                                        <rect key="frame" x="300.5" y="60" width="70" height="20"/>
+                                        <rect key="frame" x="301" y="60" width="70" height="20"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="20" id="uKC-rT-gdk"/>
                                             <constraint firstAttribute="width" constant="70" id="zQb-oG-3f3"/>
@@ -565,7 +565,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="免提" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LgD-qV-Tsh">
-                                        <rect key="frame" x="300" y="330.5" width="70" height="20"/>
+                                        <rect key="frame" x="300" y="331" width="70" height="20"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
@@ -674,7 +674,7 @@
                                 <color key="shadowColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KcS-Oc-kNo">
-                                <rect key="frame" x="157.5" y="587" width="60" height="60"/>
+                                <rect key="frame" x="158" y="587" width="60" height="60"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="9x3-pE-NhO"/>
@@ -1039,6 +1039,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wz4-WR-8qp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="800.79999999999995" y="987.25637181409309"/>
+        </scene>
+        <!--Make Call View Controller-->
+        <scene sceneID="RwI-Pg-34E">
+            <objects>
+                <viewController storyboardIdentifier="MakeCallViewController" id="uab-tT-rCB" customClass="MakeCallViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="K6n-3b-Jf8"/>
+                        <viewControllerLayoutGuide type="bottom" id="pqf-pN-1Tx"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="vvz-rj-7R3">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qQ8-h9-EdF" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1556" y="987"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="LIX-Du-1nM">
@@ -2059,7 +2077,4 @@
         <image name="tianjia.png" width="60" height="60"/>
         <image name="zhuanhua.png" width="60" height="60"/>
     </resources>
-    <inferredMetricsTieBreakers>
-        <segue reference="0Hq-bz-Aay"/>
-    </inferredMetricsTieBreakers>
 </document>
