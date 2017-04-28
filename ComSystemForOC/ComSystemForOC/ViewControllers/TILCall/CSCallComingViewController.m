@@ -21,6 +21,16 @@
     // Do any additional setup after loading the view.
 }
 
+- (IBAction)receiveCall:(id)sender {
+    
+    CSRecvViewController *recvVC = [[UIStoryboard storyboardWithName:@"CSCall" bundle:nil] instantiateViewControllerWithIdentifier:@"CSRecvViewController"];
+    recvVC.invite = self.invite;
+    [self addChildViewController:recvVC];
+    
+    recvVC.view.frame = [UIScreen mainScreen].bounds;
+    [self.view addSubview:recvVC.view];
+    
+}
 
 - (IBAction)rejectCall:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
@@ -29,6 +39,36 @@
 - (IBAction)unwindForBack:(UIStoryboardSegue *)segue {
     
     
+}
+
+
+
+- (void)changeControllerFromOldController:(UIViewController *)oldController toNewController:(UIViewController *)newController
+{
+    [self addChildViewController:newController];
+    /**
+     *  切换ViewController
+     */
+    [self transitionFromViewController:oldController toViewController:newController duration:0.3 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        
+        //做一些动画
+        
+    } completion:^(BOOL finished) {
+        
+//        if (finished) {
+//            
+//            //移除oldController，但在removeFromParentViewController：方法前不会调用willMoveToParentViewController:nil 方法，所以需要显示调用
+//            [self didMoveToParentViewController:newController];
+//            [oldController willMoveToParentViewController:nil];
+//            [oldController removeFromParentViewController];
+//            currentVC = newController;
+//            
+//        }else
+//        {
+//            currentVC = oldController;
+//        }
+        
+    }];
 }
 
 

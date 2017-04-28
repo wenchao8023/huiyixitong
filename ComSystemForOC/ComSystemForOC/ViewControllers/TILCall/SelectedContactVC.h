@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void(^QuedingBlock)(NSArray *dataArr);
+typedef void(^QuedingBlock)(NSArray * _Nonnull dataArr);
 
 @interface SelectedContactVC : UITableViewController
 

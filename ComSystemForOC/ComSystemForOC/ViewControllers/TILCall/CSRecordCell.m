@@ -26,7 +26,7 @@
 
 -(void)config:(CSRecordModel *)model {
     
-    self.leadingLabel.text = [NSString stringWithFormat:@"%@(%lu人)",model.leaderName, model.participants.count];
+    self.leadingLabel.text = [NSString stringWithFormat:@"%@(%d人)",model.leaderName, (int)model.participants.count];
     
     self.timeLabel.text = model.startTime;
     

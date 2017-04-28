@@ -92,7 +92,7 @@
  *  @param fileData     文件数据，可以为NSData、UIImage、NSString、NSURL（文件路径）、SSDKData、SSDKImage
  *  @param emoticonData 表情数据，可以为NSData、UIImage、NSURL（文件路径）、SSDKData、SSDKImage
  *  @param type         分享类型，支持SSDKContentTypeText、SSDKContentTypeImage、SSDKContentTypeWebPage、SSDKContentTypeApp、SSDKContentTypeAudio和SSDKContentTypeVideo
- *  @param platformType 平台子类型，只能传入SSDKPlatformSubTypeWechatSession、SSDKPlatformSubTypeWechatTimeline和SSDKPlatformSubTypeWechatFav其中一个
+ *  @param platformSubType 平台子类型，只能传入SSDKPlatformSubTypeWechatSession、SSDKPlatformSubTypeWechatTimeline和SSDKPlatformSubTypeWechatFav其中一个
  *
  *  分享文本时：
  *  设置type为SSDKContentTypeText, 并填入text参数
@@ -136,10 +136,10 @@
  *  @param extInfo              扩展信息
  *  @param fileData             文件数据，可以为NSData、UIImage、NSString、NSURL（文件路径）、SSDKData、SSDKImage
  *  @param emoticonData         表情数据，可以为NSData、UIImage、NSURL（文件路径）、SSDKData、SSDKImage
- *  @param sourceFileExtension  源文件后缀名
+ *  @param fileExtension        件后缀名
  *  @param sourceFileData       源文件数据，可以为NSData、NSString、NSURL（文件路径）、SSDKData
  *  @param type                 分享类型，支持SSDKContentTypeText、SSDKContentTypeImage、SSDKContentTypeWebPage、SSDKContentTypeApp、SSDKContentTypeAudio和SSDKContentTypeVideo
- *  @param platformType 平台子类型，只能传入其中一个
+ *  @param platformSubType      平台子类型，只能传入其中一个
  *
  *  分享文本时：
  *  设置type为SSDKContentTypeText, 并填入text参数
@@ -599,7 +599,7 @@
  *  @PARAM imageSize            图片尺寸，，用于SSDKPlatformSubTypeKaKaoTalk分享时指定图片尺寸
  *  @param appButtonTitle       应用按钮标题,用于SSDKPlatformSubTypeKaKaoTalk分享App类型时设置
  *  @param androidExecParam     启动安卓版应用时传入参数，如果没有可以为nil，如:@{@"key" : @"value", @"key2" : @"value2"}。
- *  @param andoridMarkParam     安卓版应用的下载地址，如果没有可以为nil
+ *  @param androidMarkParam     安卓版应用的下载地址，如果没有可以为nil
  *  @param iphoneExecParams     启动iPhone应用时传入参数，如果没有可以为nil，如:@{@"key" : @"value", @"key2" : @"value2"}。
  *  @param iphoneMarkParam      iPhone应用的下载地址，如果没有可以nil
  *  @param ipadExecParams       iPad应用时传入参数，如果没有可以为nil，如:@{@"key" : @"value", @"key2" : @"value2"}。此参数仅用于Kakao Talk平台。
@@ -708,7 +708,7 @@
  *  @param comment      评论信息,在应用内分享朋友圈时该字段有效
  *  @param userId       发送給指定用户的唯一标识，在应用内分享好友时需要指定。注：如果双方为非好友关系发送消息即使提示成功，对方也无法接受。
  *  @param type         分享类型，支持SSDKContentTypeText、SSDKContentTypeImage、SSDKContentTypeWebPage、SSDKContentTypeApp、SSDKContentTypeAudio和SSDKContentTypeVideo
- *  @param platformType 平台子类型，只能传入SSDKPlatformTypeYiXinSession、SSDKPlatformTypeYiXinTimeline和SSDKPlatformTypeYiXinFav其中一个
+ *  @param platformSubType 平台子类型，只能传入SSDKPlatformTypeYiXinSession、SSDKPlatformTypeYiXinTimeline和SSDKPlatformTypeYiXinFav其中一个
  *
  *  分享文本时：
  *  设置type为SSDKContentTypeText, 并填入text参数

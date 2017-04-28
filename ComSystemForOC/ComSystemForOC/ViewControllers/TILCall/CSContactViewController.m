@@ -66,7 +66,7 @@
     
     self.nickName = [CommonUtil getUserID];
     
-    [self.dataArray addObjectsFromArray:@[@"Aaaaaaaa", @"Bbbbbbbb", @"Cccccccc", @"Dddddddd", @"Eee", @"F", @"Gg", @"RNG"]];
+    [self.dataArray addObjectsFromArray:@[@"lu", @"chao", @"mumu", @"rui", @"Eee", @"F", @"Gg", @"RNG"]];
     
     for (NSString *nameStr in self.dataArray) {
         if ([nameStr isEqualToString:self.nickName]) {    //刚进来的时候，只有自己是选择的，如果是快速开始就不是的，这里要根据需求设计
@@ -156,9 +156,9 @@
     
     [self setSelected];
     
-    self.selectLabel.text = [NSString stringWithFormat:@"已选择：%u人", self.selectArray.count];
+    self.selectLabel.text = [NSString stringWithFormat:@"已选择：%d人", (int)self.selectArray.count];
     
-    self.confirmLabel.text = [NSString stringWithFormat:@"确定(%u/15)", self.selectArray.count];
+    self.confirmLabel.text = [NSString stringWithFormat:@"确定(%d/15)", (int)self.selectArray.count];
 }
 
 - (void)setSelected {
@@ -176,19 +176,6 @@
         }
     }
 }
-
-
-
-//- (IBAction)clickSelected:(id)sender {
-//    
-//    NSLog(@"已选择");
-//    [self performSegueWithIdentifier:@"showSelectedContact" sender:self];
-//}
-//
-//- (IBAction)clickConfirm:(id)sender {
-//    
-//    NSLog(@"确认");
-//}
 
 -(BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
     

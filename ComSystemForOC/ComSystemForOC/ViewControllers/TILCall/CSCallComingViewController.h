@@ -10,6 +10,6 @@
 
 @interface CSCallComingViewController : UIViewController
 
-@property (nonatomic, strong, nullable) TILCallInvitation *invitation;
+@property (nonatomic, strong, nullable) TILCallInvitation *invite;
 
 @end

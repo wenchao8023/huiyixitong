@@ -15,4 +15,11 @@
 -(void)configWithUnSelected:(NSString *)nameStr;
 
 -(void)configSelf:(NSString *)nameStr;
+
+
+- (void)invitedConfig:(NSString *)nameStr ;
+
+//- (void)inviteMoreConfig:(NSString *)nameStr ;
+//
+//- (void)unInviteMoreConfig:(NSString *)nameStr ;
 @end

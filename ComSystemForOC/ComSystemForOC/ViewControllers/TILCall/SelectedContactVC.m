@@ -21,7 +21,7 @@
     
     [super viewWillAppear:animated];
     
-    self.navigationItem.title = [NSString stringWithFormat:@"已选择数量:%lu", self.dataArray.count];
+    self.navigationItem.title = [NSString stringWithFormat:@"已选择数量:%lu", (unsigned long)self.dataArray.count];
 }
 
 - (void)viewDidLoad {
@@ -66,7 +66,7 @@
     __weak typeof(self) sself = self;
     cell.delBlock = ^(){
         [sself.dataArray removeObjectAtIndex:indexPath.row];
-        self.navigationItem.title = [NSString stringWithFormat:@"已选择数量:%lu", self.dataArray.count];
+        self.navigationItem.title = [NSString stringWithFormat:@"已选择数量:%lu", (unsigned long)self.dataArray.count];
         [sself.tableView reloadData];
     };
     

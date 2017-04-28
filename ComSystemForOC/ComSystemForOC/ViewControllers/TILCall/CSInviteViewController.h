@@ -8,8 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+typedef void(^InviteBlock)(NSArray * _Nullable selectArray);
+
 @interface CSInviteViewController : UIViewController
 
-@property (nonatomic, strong) NSMutableArray *inviteMoreArray;
+@property (nonatomic, strong, nullable) NSMutableArray *inviteMoreArray;
+
+@property (nonatomic, copy, nullable) InviteBlock inviteBlock;
 
 @end

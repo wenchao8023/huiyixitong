@@ -173,9 +173,9 @@ UIAlertController *_alert;
                 ILiveQualityData *qualityData = [[ILiveRoomManager getInstance] getQualityData];
                 NSMutableString *paramString = [NSMutableString string];
                 //FPS
-                [paramString appendString:[NSString stringWithFormat:@"FPS:%ld.\n",qualityData.interactiveSceneFPS/10]];
+                [paramString appendString:[NSString stringWithFormat:@"FPS:%ld.\n",(long)qualityData.interactiveSceneFPS/10]];
                 //Send Recv
-                [paramString appendString:[NSString stringWithFormat:@"Send: %ldkbps, Recv: %ldkbps.\n",qualityData.sendRate,(long)qualityData.recvRate]];
+                [paramString appendString:[NSString stringWithFormat:@"Send: %ldkbps, Recv: %ldkbps.\n",(long)qualityData.sendRate,(long)qualityData.recvRate]];
                 //sendLossRate recvLossRate
                 CGFloat sendLossRate = (CGFloat)qualityData.sendLossRate / (CGFloat)100;
                 CGFloat recvLossRate = (CGFloat)qualityData.recvLossRate / (CGFloat)100;
@@ -192,7 +192,7 @@ UIAlertController *_alert;
                 for (NSString *key in keys)
                 {
                     QAVFrameDesc *desc = _resolutionDic[key];
-                    [paramString appendString:[NSString stringWithFormat:@"%@---> %d * %d\n",key,desc.width,desc.height]];
+                    [paramString appendString:[NSString stringWithFormat:@"%@---> %d * %d\n",key,(unsigned int)desc.width,(unsigned int)desc.height]];
                 }
                 //avsdk版本号
                 NSString *avSDKVer = [NSString stringWithFormat:@"AVSDK版本号: %@\n",[QAVContext getVersion]];

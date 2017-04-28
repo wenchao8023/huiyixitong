@@ -21,7 +21,6 @@
 
 - (UINavigationController *)navigationViewController;
 - (UIViewController *)topViewController;
-- (UIViewController *)currentViewController;
 - (NSArray *)popToRootViewController;
 - (UIViewController *)popViewController;
 - (NSArray *)popToViewController:(UIViewController *)viewController;

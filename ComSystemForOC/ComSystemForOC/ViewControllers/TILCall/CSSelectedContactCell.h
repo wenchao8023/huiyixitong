@@ -13,6 +13,6 @@ typedef void(^DelBlock)();
 @interface CSSelectedContactCell : UITableViewCell
 
 @property (nonatomic, copy, nullable) DelBlock delBlock;
--(void)config:(NSString *)str;
+-(void)config:(NSString * _Nonnull)str;
 
 @end

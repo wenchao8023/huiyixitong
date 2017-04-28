@@ -21,8 +21,8 @@
     
     UIViewController *nav = [[AppDelegate sharedAppDelegate] topViewController];
     NSLog(@"back form %@", NSStringFromClass([nav class]));
-//    CSCallComingViewController *call = [[UIStoryboard storyboardWithName:@"CSCall" bundle:nil] instantiateViewControllerWithIdentifier:@"CSCallComingViewController"];
-    CallMultiRecvViewController *call = [[UIStoryboard storyboardWithName:@"CSCall" bundle:nil] instantiateViewControllerWithIdentifier:@"CallMultiRecvViewController"];
+    CSCallComingViewController *call = [[UIStoryboard storyboardWithName:@"CSCall" bundle:nil] instantiateViewControllerWithIdentifier:@"CSCallComingViewController"];
+//    CallMultiRecvViewController *call = [[UIStoryboard storyboardWithName:@"CSCall" bundle:nil] instantiateViewControllerWithIdentifier:@"CallMultiRecvViewController"];
     call.invite = invitation;
     [nav presentViewController:call animated:YES completion:nil];
 }

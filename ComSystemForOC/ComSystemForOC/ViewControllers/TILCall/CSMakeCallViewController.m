@@ -8,6 +8,7 @@
 
 #import "CSMakeCallViewController.h"
 
+#import "CSInviteViewController.h"
 
 static  int kRenderViewHeight = 160;
 static  int kRenderViewWidth  = 0;
@@ -201,6 +202,9 @@ static const int kRenderViewSpace = 10;
             [ws setText:@"呼叫成功"];
             
             [ws setEnableButton:YES];
+            
+            [[ILiveRoomManager getInstance] setBeauty:5];
+            [[ILiveRoomManager getInstance] setWhite:5];
             
             self.duration = 0;
             
@@ -490,6 +494,8 @@ static const int kRenderViewSpace = 10;
         default:
             break;
     }
+    
+    [self.numberButton setBackgroundImage:[UIImage imageNamed:[NSString stringWithFormat:@"number%lu", (unsigned long)self.membersArray.count]] forState:UIControlStateNormal];
 }
 
 - (NSTimer *)durationTimer {
@@ -572,7 +578,7 @@ static const int kRenderViewSpace = 10;
         
     }
     
-    [self.numberButton setBackgroundImage:[UIImage imageNamed:[NSString stringWithFormat:@"number%d", self.indexArray.count]] forState:UIControlStateNormal];
+    [self.numberButton setBackgroundImage:[UIImage imageNamed:[NSString stringWithFormat:@"number%lu", (unsigned long)self.membersArray.count]] forState:UIControlStateNormal];
 }
 
 - (UILabel *)getRenderNameLabel:(CGRect)frame index:(int)i {
@@ -595,7 +601,7 @@ static const int kRenderViewSpace = 10;
         CGFloat x = rv.frame.origin.x;
         printf("x == %f", x);
         
-        int bgIndex = [self.statuArray indexOfObject:@"1"];
+        NSInteger bgIndex = [self.statuArray indexOfObject:@"1"];
         int tapIndex = x / kRenderViewWidth;
         
         tapIndex = tapIndex < bgIndex ? tapIndex : tapIndex + 1;
@@ -708,16 +714,32 @@ static const int kRenderViewSpace = 10;
     
     if ([segue.identifier isEqualToString:@"inviteMore"]) {
         
+        NSMutableArray *tempArr = [NSMutableArray arrayWithCapacity:0];
+        for (TILCallMember *member in self.membersArray) {
+            [tempArr addObject:member.identifier];
+        }
+        
         UINavigationController *destinationNavi = [segue destinationViewController];
-        
-        UIViewController *destinationController = destinationNavi.topViewController;
-        
-        [destinationController setValue:self.membersArray
+        CSInviteViewController *destinationController = (CSInviteViewController *)destinationNavi.topViewController;
+        [destinationController setValue:tempArr
                                  forKey:@"inviteMoreArray"];
+        
+        __weak typeof(self) sself = self;
+        destinationController.inviteBlock = ^(NSArray *inviteArray) {
+            
+            
+            [sself.call inviteCall:inviteArray callTip:@"" custom:@"" result:^(TILCallError *err) {
+                if (err) {
+                    NSLog(@"邀请失败");
+                } else {
+                    NSLog(@"邀请成功");
+                }
+            }];
+        };
     }
 }
 
-- (void)unwindForSegue:(UIStoryboardSegue *)unwindSegue towardsViewController:(UIViewController *)subsequentVC {
+-(IBAction)cancelInviteMoreContact:(UIStoryboardSegue *)segue {
     
 }
 

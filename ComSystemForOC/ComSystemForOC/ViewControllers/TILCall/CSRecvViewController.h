@@ -8,9 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-
-
 @interface CSRecvViewController : UIViewController
 
+@property (nonatomic, strong, nullable) TILCallInvitation *invite;
 
 @end

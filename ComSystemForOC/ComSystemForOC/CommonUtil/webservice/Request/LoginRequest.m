@@ -17,7 +17,7 @@
 
 - (NSDictionary *)packageParams
 {
-    NSDictionary *paramDic = @{@"id"  : _identifier,
+    NSDictionary *paramDic = @{@"uname"  : _identifier,
                                @"pwd" : _pwd
                                };
     return paramDic;

@@ -51,14 +51,12 @@
     UIStoryboard *sbd = [UIStoryboard storyboardWithName:@"CSCall" bundle:nil];
     UINavigationController *callNav = sbd.instantiateInitialViewController;
     
-    
     self.viewControllers = [NSArray arrayWithObjects:listNav, publishNav, callNav, setNav, nil];
     
     UITabBarItem *liveListItem = [self.tabBar.items objectAtIndex:0];
     UITabBarItem *publishItem = [self.tabBar.items objectAtIndex:1];
     UITabBarItem *callItem = [self.tabBar.items objectAtIndex:2];
     UITabBarItem *setItem = [self.tabBar.items objectAtIndex:3];
-    
     
     [self setTabBarItem:liveListItem withNormalImageName:@"video" andSelectedImageName:@"video_hover" andTitle:@"最新"];
     [self setTabBarItem:publishItem withNormalImageName:@"video" andSelectedImageName:@"video_hover"  andTitle:@"直播"];
@@ -101,6 +99,7 @@
 {
     [tabBarItem setImage:[[UIImage imageNamed:normalImageName] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
     [tabBarItem setSelectedImage:[[UIImage imageNamed:selectedImageName] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
+    [tabBarItem setTitleTextAttributes:@{NSForegroundColorAttributeName : kColorRed} forState:UIControlStateSelected];
     [tabBarItem setTitle:title];
 }
 
