@@ -45,7 +45,7 @@
 #define WCRGBAColor(r, g, b, a) [UIColor colorWithRed:(r)/255.0 green:(r)/255.0 blue:(r)/255.0 alpha:a]     //设置RGBA颜色
 
 #define WCBgColor               [UIColor colorWithRed:0.98 green:0.96 blue:0.93 alpha:1]    // 视图背景颜色
-
+#define WCButtonColor        [UIColor colorWithRed:0.04 green:0.43 blue:0.4 alpha:1]     // 按钮背景颜色
 
 #pragma mark - 4 自定义高效率的 NSLog
 #ifdef DEBUG

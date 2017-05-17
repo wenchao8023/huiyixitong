@@ -46,14 +46,6 @@
 
 - (UIButton *)reluanchBtn {
     if (!_reluanchBtn) {
-        
-//        UIView *btnView = [WCUIKitControl createViewWithFrame:CGRectMake(0, 0, 120, 120)];
-//        [btnView setCenterX:self.view.centerX];
-//        [btnView setY:CGRectGetMaxY(self.contentView.frame) - 60];
-//        WCViewBorder_Radius(btnView, 60);
-//        [self.view addSubview:btnView];
-//        [btnView setBackgroundColor:WCBgColor];
-        
         UIButton *reluanchBtn = [WCUIKitControl createButtonWithFrame:CGRectMake(0, 0, 80, 80)
                                                                Target:self
                                                                Action:@selector(reluanchAction)

@@ -1,28 +1,29 @@
 //
-//  CollectionViewController.m
+//  MeetingOrderViewController.m
 //  M8Tool
 //
-//  Created by chao on 2017/5/11.
+//  Created by chao on 2017/5/17.
 //  Copyright © 2017年 ibuildtek. All rights reserved.
 //
 
-#import "CollectionViewController.h"
+#import "MeetingOrderViewController.h"
 
-@interface CollectionViewController ()
+@interface MeetingOrderViewController ()
 
 @end
 
-@implementation CollectionViewController
+@implementation MeetingOrderViewController
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [self setHeaderTitle:@"会议收藏"];
+    [self setHeaderTitle:@"预约会议"];
 }
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-    [self.contentView setHeight:kContentHeight_bottom30];
 }
 
 - (void)didReceiveMemoryWarning {

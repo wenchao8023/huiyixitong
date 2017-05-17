@@ -1,46 +1,44 @@
 //
-//  MeetingViewController.m
+//  MeetingContactViewController.m
 //  M8Tool
 //
-//  Created by chao on 2017/5/11.
+//  Created by chao on 2017/5/17.
 //  Copyright © 2017年 ibuildtek. All rights reserved.
 //
 
-#import "MeetingViewController.h"
+#import "MeetingContactViewController.h"
 
-
-@interface MeetingViewController ()
+@interface MeetingContactViewController ()
 
 @end
 
-@implementation MeetingViewController
+@implementation MeetingContactViewController
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [self setHeaderTitle:@"会议中心"];
+    [self setHeaderTitle:[self getTitle]];
 }
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-    WCLog(@"%@", [self.view class]);
-    
-    [self reloadSuperViews];
 }
 
-
-
-- (void)reloadSuperViews {
-    
-    self.view.frame = [UIScreen mainScreen].bounds;
-    [self.view setHeight:SCREENH_HEIGHT - kDefaultTabbarHeight];
-   
-    self.bgImageView.frame = self.view.bounds;
-    [self.view sendSubviewToBack:self.bgImageView];
+#pragma mark - 判断视图类型
+- (NSString *)getTitle {
+    switch (self.contactType) {
+        case ContactType_tel:
+            return @"手机通话";
+            break;
+        case ContactType_contact:
+            return @"通讯录";
+            break;
+        default:
+            break;
+    }
 }
-
-
 
 
 - (void)didReceiveMemoryWarning {

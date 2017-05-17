@@ -34,7 +34,7 @@
 {
     @autoreleasepool
     {
-        viewController.hidesBottomBarWhenPushed = YES;
+//        viewController.hidesBottomBarWhenPushed = YES;
         [[self navigationViewController] pushViewController:viewController animated:YES];
     }
 }
@@ -43,7 +43,7 @@
 {
     @autoreleasepool
     {
-        viewController.hidesBottomBarWhenPushed = YES;
+//        viewController.hidesBottomBarWhenPushed = YES;
         [[self navigationViewController] pushViewController:viewController animated:animated];
     }
 }

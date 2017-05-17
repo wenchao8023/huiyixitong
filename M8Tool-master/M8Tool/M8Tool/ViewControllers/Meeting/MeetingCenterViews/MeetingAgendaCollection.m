@@ -9,6 +9,16 @@
 #import "MeetingAgendaCollection.h"
 #import "MeetingAgendaCell.h"
 
+
+
+
+
+
+
+
+
+
+
 @interface MeetingAgendaCollection ()<UICollectionViewDelegate, UICollectionViewDataSource>
 
 @property (nonatomic, strong) NSArray *titleArray;
@@ -36,7 +46,7 @@
     layout.itemSize = CGSizeMake(SCREEN_WIDTH / 5, SCREEN_WIDTH / 5);
     layout.scrollDirection          = UICollectionViewScrollDirectionHorizontal;
     layout.minimumLineSpacing       = 0;
-    layout.headerReferenceSize      = CGSizeMake(0, 0);
+    layout.headerReferenceSize      = CGSizeMake(20, SCREENH_HEIGHT);
     layout.minimumInteritemSpacing  = 0;
     
     
@@ -68,6 +78,8 @@
 }
 
 
+
+
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     
     NSLog(@"第 %f 页", self.contentOffset.x / SCREEN_WIDTH);
@@ -83,6 +95,6 @@
 }
 
 - (int)getTotalPage:(NSInteger)count {
-    return count % 5 == 0 ? count / 5 : count / 5 + 1;
+    return (int)(count % 5 == 0 ? count / 5 : count / 5 + 1);
 }
 @end

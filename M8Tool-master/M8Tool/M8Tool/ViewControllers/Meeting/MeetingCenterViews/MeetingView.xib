@@ -26,14 +26,14 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="M6" translatesAutoresizingMaskIntoConstraints="NO" id="jyx-GU-ZDV">
-                    <rect key="frame" x="43" y="64" width="290" height="218"/>
+                    <rect key="frame" x="43" y="64" width="290" height="217.5"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="jyx-GU-ZDV" secondAttribute="height" multiplier="4:3" id="EHn-sR-DlH"/>
                     </constraints>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="会议议程" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ugI-od-ww3">
-                    <rect key="frame" x="8" y="282" width="60" height="20"/>
+                    <rect key="frame" x="8" y="281.5" width="60" height="20"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="20" id="n1q-E5-zg1"/>
                     </constraints>
@@ -42,7 +42,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="TDr-V0-HsG" customClass="MeetingAgendaCollection">
-                    <rect key="frame" x="0.0" y="310" width="375" height="130"/>
+                    <rect key="frame" x="0.0" y="309.5" width="375" height="130"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="129.5" id="dYK-pb-HMy"/>
@@ -55,7 +55,7 @@
                     </collectionViewFlowLayout>
                 </collectionView>
                 <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="9a5-v3-n2s">
-                    <rect key="frame" x="168" y="430" width="39" height="10"/>
+                    <rect key="frame" x="168" y="429.5" width="39" height="10"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="39" id="ZN7-BJ-SK5"/>
@@ -63,7 +63,7 @@
                     </constraints>
                 </pageControl>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="zlA-mE-B5h" customClass="MeetingButtonsCollection">
-                    <rect key="frame" x="0.0" y="460" width="375" height="187"/>
+                    <rect key="frame" x="0.0" y="459.5" width="375" height="187.5"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="zlA-mE-B5h" secondAttribute="height" multiplier="2" id="sbV-gc-sb9"/>
@@ -75,22 +75,38 @@
                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                     </collectionViewFlowLayout>
                 </collectionView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SFu-2T-TRQ">
+                    <rect key="frame" x="295" y="281" width="60" height="28.5"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="60" id="fVt-VX-Jfv"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="DroidSansFallback" family="Droid Sans Fallback" pointSize="15"/>
+                    <state key="normal" title="更多&gt;">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="moreAgendaAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="ZaR-Gf-6R4"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="TDr-V0-HsG" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="0zz-qx-0yo"/>
                 <constraint firstItem="9a5-v3-n2s" firstAttribute="bottom" secondItem="TDr-V0-HsG" secondAttribute="bottom" id="JCY-8P-Z54"/>
                 <constraint firstAttribute="bottom" secondItem="zlA-mE-B5h" secondAttribute="bottom" constant="20" id="MAc-uD-213"/>
+                <constraint firstItem="TDr-V0-HsG" firstAttribute="top" secondItem="SFu-2T-TRQ" secondAttribute="bottom" id="MOJ-2U-wT7"/>
                 <constraint firstItem="ugI-od-ww3" firstAttribute="top" secondItem="jyx-GU-ZDV" secondAttribute="bottom" id="Mxr-zO-dxN"/>
                 <constraint firstItem="zlA-mE-B5h" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="PXY-0Q-Kru"/>
                 <constraint firstItem="jyx-GU-ZDV" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="S5U-Bk-BAr"/>
                 <constraint firstItem="zlA-mE-B5h" firstAttribute="top" secondItem="TDr-V0-HsG" secondAttribute="bottom" constant="20" id="deu-ki-9nW"/>
+                <constraint firstItem="SFu-2T-TRQ" firstAttribute="top" secondItem="jyx-GU-ZDV" secondAttribute="bottom" id="iay-Qf-zIz"/>
                 <constraint firstItem="TDr-V0-HsG" firstAttribute="top" secondItem="ugI-od-ww3" secondAttribute="bottom" constant="8" id="k3T-Se-ZOV"/>
                 <constraint firstItem="9a5-v3-n2s" firstAttribute="centerX" secondItem="TDr-V0-HsG" secondAttribute="centerX" id="phy-At-Reh"/>
                 <constraint firstItem="ugI-od-ww3" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="sVe-Ze-5dG"/>
                 <constraint firstItem="jyx-GU-ZDV" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="64" id="vcX-Bo-qAx"/>
                 <constraint firstItem="zlA-mE-B5h" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="vkz-Qd-EYA"/>
                 <constraint firstAttribute="trailing" secondItem="TDr-V0-HsG" secondAttribute="trailing" id="whX-eK-NNR"/>
+                <constraint firstAttribute="trailing" secondItem="SFu-2T-TRQ" secondAttribute="trailing" constant="20" id="wta-TW-UDo"/>
             </constraints>
             <connections>
                 <outlet property="agendaCollection" destination="TDr-V0-HsG" id="ufR-vi-o7H"/>

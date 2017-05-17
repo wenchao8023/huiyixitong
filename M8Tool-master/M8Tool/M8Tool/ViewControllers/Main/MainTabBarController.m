@@ -48,6 +48,7 @@
 - (void)initTabbar {
     
     [[UITabBar appearance] setBackgroundImage:[UIImage imageWithColor:WCWhite size:self.tabBar.frame.size]];
+//    self.delegate = self;
     
     RecordViewController *recordVC      = [[RecordViewController alloc] init];
     recordVC.recordViewType             = RecordViewType_record;
@@ -103,6 +104,11 @@
 {
     self.selectedIndex = 1;
 }
+
+
+
+
+
 - (void)autoLogin {
     LoginManager *manager = [LoginManager new];
     manager.loginTypeBlock = ^(LoginType type){
