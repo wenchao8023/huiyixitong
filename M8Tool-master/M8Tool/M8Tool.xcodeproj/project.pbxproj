@@ -147,6 +147,11 @@
 		94C06F4E1EBC76BA00336E5F /* LoginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 94C06F4D1EBC76BA00336E5F /* LoginManager.m */; };
 		94C089D81EC976E600EE3403 /* RecorDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 94C089D71EC976E600EE3403 /* RecorDetailView.m */; };
 		94C089DA1EC976F200EE3403 /* RecorDetailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94C089D91EC976F200EE3403 /* RecorDetailView.xib */; };
+		94C9B8371ECD688400F42654 /* MeetingLuanchTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 94C9B8351ECD688400F42654 /* MeetingLuanchTableViewCell.m */; };
+		94C9B8381ECD688400F42654 /* MeetingLuanchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94C9B8361ECD688400F42654 /* MeetingLuanchTableViewCell.xib */; };
+		94C9B83B1ECDA52100F42654 /* LatestMembersCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 94C9B83A1ECDA52100F42654 /* LatestMembersCollection.m */; };
+		94C9B83F1ECDA59000F42654 /* MeetingMembersCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 94C9B83D1ECDA59000F42654 /* MeetingMembersCell.m */; };
+		94C9B8401ECDA59000F42654 /* MeetingMembersCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94C9B83E1ECDA59000F42654 /* MeetingMembersCell.xib */; };
 		94DE95891EAE145400A44DB1 /* UIColor+MLPFlatColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 94DE95801EAE145400A44DB1 /* UIColor+MLPFlatColors.m */; };
 		94DE958A1EAE145400A44DB1 /* UIImage+Common.m in Sources */ = {isa = PBXBuildFile; fileRef = 94DE95821EAE145400A44DB1 /* UIImage+Common.m */; };
 		94DE958B1EAE145400A44DB1 /* UIImage+TintColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 94DE95841EAE145400A44DB1 /* UIImage+TintColor.m */; };
@@ -405,6 +410,14 @@
 		94C089D61EC976E600EE3403 /* RecorDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecorDetailView.h; sourceTree = "<group>"; };
 		94C089D71EC976E600EE3403 /* RecorDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecorDetailView.m; sourceTree = "<group>"; };
 		94C089D91EC976F200EE3403 /* RecorDetailView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RecorDetailView.xib; sourceTree = "<group>"; };
+		94C9B8341ECD688400F42654 /* MeetingLuanchTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeetingLuanchTableViewCell.h; sourceTree = "<group>"; };
+		94C9B8351ECD688400F42654 /* MeetingLuanchTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeetingLuanchTableViewCell.m; sourceTree = "<group>"; };
+		94C9B8361ECD688400F42654 /* MeetingLuanchTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MeetingLuanchTableViewCell.xib; sourceTree = "<group>"; };
+		94C9B8391ECDA52100F42654 /* LatestMembersCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LatestMembersCollection.h; sourceTree = "<group>"; };
+		94C9B83A1ECDA52100F42654 /* LatestMembersCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LatestMembersCollection.m; sourceTree = "<group>"; };
+		94C9B83C1ECDA59000F42654 /* MeetingMembersCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeetingMembersCell.h; sourceTree = "<group>"; };
+		94C9B83D1ECDA59000F42654 /* MeetingMembersCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeetingMembersCell.m; sourceTree = "<group>"; };
+		94C9B83E1ECDA59000F42654 /* MeetingMembersCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MeetingMembersCell.xib; sourceTree = "<group>"; };
 		94DE957E1EAE145400A44DB1 /* CategoryHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CategoryHeader.h; sourceTree = "<group>"; };
 		94DE957F1EAE145400A44DB1 /* UIColor+MLPFlatColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+MLPFlatColors.h"; sourceTree = "<group>"; };
 		94DE95801EAE145400A44DB1 /* UIColor+MLPFlatColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+MLPFlatColors.m"; sourceTree = "<group>"; };
@@ -1115,8 +1128,16 @@
 			children = (
 				94BDE52A1ECC4D2200ECC089 /* MeetingLuanchTableView.h */,
 				94BDE52B1ECC4D2200ECC089 /* MeetingLuanchTableView.m */,
+				94C9B8341ECD688400F42654 /* MeetingLuanchTableViewCell.h */,
+				94C9B8351ECD688400F42654 /* MeetingLuanchTableViewCell.m */,
+				94C9B8361ECD688400F42654 /* MeetingLuanchTableViewCell.xib */,
 				94BDE5331ECC599800ECC089 /* MeetingMembersCollection.h */,
 				94BDE5341ECC599800ECC089 /* MeetingMembersCollection.m */,
+				94C9B8391ECDA52100F42654 /* LatestMembersCollection.h */,
+				94C9B83A1ECDA52100F42654 /* LatestMembersCollection.m */,
+				94C9B83C1ECDA59000F42654 /* MeetingMembersCell.h */,
+				94C9B83D1ECDA59000F42654 /* MeetingMembersCell.m */,
+				94C9B83E1ECDA59000F42654 /* MeetingMembersCell.xib */,
 			);
 			name = LuanchViews;
 			sourceTree = "<group>";
@@ -1311,11 +1332,13 @@
 				94C06F471EBC69F800336E5F /* ssssssss.jpg in Resources */,
 				946753C91EBC16D500653A2C /* Main.storyboard in Resources */,
 				9497DF3D1ECA966A009C35CB /* MeetingView.xib in Resources */,
+				94C9B8381ECD688400F42654 /* MeetingLuanchTableViewCell.xib in Resources */,
 				944AF31F1E9494C00044B44C /* LICENSE in Resources */,
 				9441C3C71E98B62400CF97A4 /* readme in Resources */,
 				9497DF3A1ECA966A009C35CB /* MeetingButtonsCell.xib in Resources */,
 				9441C3C91E98B62400CF97A4 /* Shaderf.glsl in Resources */,
 				944AF21A1E948DC10044B44C /* ShareSDK.bundle in Resources */,
+				94C9B8401ECDA59000F42654 /* MeetingMembersCell.xib in Resources */,
 				944AF2131E948DC10044B44C /* TencentOpenApi_IOS_Bundle.bundle in Resources */,
 				94C06F3B1EBC50C900336E5F /* UserProtocol.html in Resources */,
 				944AF2171E948DC10044B44C /* read_me.txt in Resources */,
@@ -1355,6 +1378,7 @@
 				94E4CD5F1E963E7F00C3C6BF /* ReportMemIdRequest.m in Sources */,
 				94B3C2391EC585C5003ADF5F /* RecordCell.m in Sources */,
 				94BDE5201ECC451E00ECC089 /* MeetingLuanchViewController.m in Sources */,
+				94C9B8371ECD688400F42654 /* MeetingLuanchTableViewCell.m in Sources */,
 				946753D21EBC174100653A2C /* M8Tool.xcdatamodeld in Sources */,
 				944AF3081E9494C00044B44C /* AFHTTPSessionManager.m in Sources */,
 				94081B511EC471290079583C /* BaseViewController.m in Sources */,
@@ -1393,6 +1417,7 @@
 				944AF30D1E9494C00044B44C /* AFURLSessionManager.m in Sources */,
 				94E4CD561E963E7F00C3C6BF /* GetRoomPlayUrlRequest.m in Sources */,
 				944AF31A1E9494C00044B44C /* UIImage+KVNEmpty.m in Sources */,
+				94C9B83B1ECDA52100F42654 /* LatestMembersCollection.m in Sources */,
 				9497DF361ECA966A009C35CB /* MeetingAgendaCell.m in Sources */,
 				944AF3101E9494C00044B44C /* AFAutoPurgingImageCache.m in Sources */,
 				944AF30C1E9494C00044B44C /* AFURLResponseSerialization.m in Sources */,
@@ -1416,6 +1441,7 @@
 				94DE958C1EAE145400A44DB1 /* UIView+CustomAutoLayout.m in Sources */,
 				944AF3131E9494C00044B44C /* UIActivityIndicatorView+AFNetworking.m in Sources */,
 				946753CC1EBC16D500653A2C /* main.m in Sources */,
+				94C9B83F1ECDA59000F42654 /* MeetingMembersCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -10,4 +10,8 @@
 
 @interface MeetingMembersCollection : UICollectionView
 
+@property (nonatomic, assign) NSInteger currenNumbers;
+
+@property (nonatomic, assign) NSInteger totalNumbers;
+
 @end

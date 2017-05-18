@@ -12,13 +12,6 @@
 
 
 
-
-
-
-
-
-
-
 @interface MeetingAgendaCollection ()<UICollectionViewDelegate, UICollectionViewDataSource>
 
 @property (nonatomic, strong) NSArray *titleArray;
@@ -46,7 +39,6 @@
     layout.itemSize = CGSizeMake(SCREEN_WIDTH / 5, SCREEN_WIDTH / 5);
     layout.scrollDirection          = UICollectionViewScrollDirectionHorizontal;
     layout.minimumLineSpacing       = 0;
-    layout.headerReferenceSize      = CGSizeMake(20, SCREENH_HEIGHT);
     layout.minimumInteritemSpacing  = 0;
     
     
@@ -65,7 +57,6 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    
     return self.titleArray.count;
 }
 
@@ -77,12 +68,8 @@
     return cell;
 }
 
-
-
-
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     
-    NSLog(@"第 %f 页", self.contentOffset.x / SCREEN_WIDTH);
     if ([_agendaDelegate respondsToSelector:@selector(AgendaCollectionCurrentPage:)]) {
         [_agendaDelegate AgendaCollectionCurrentPage:(int)self.contentOffset.x / SCREEN_WIDTH];
     }

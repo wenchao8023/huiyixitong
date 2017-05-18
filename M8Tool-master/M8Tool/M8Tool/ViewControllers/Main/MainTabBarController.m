@@ -48,7 +48,7 @@
 - (void)initTabbar {
     
     [[UITabBar appearance] setBackgroundImage:[UIImage imageWithColor:WCWhite size:self.tabBar.frame.size]];
-//    self.delegate = self;
+    self.delegate = self;
     
     RecordViewController *recordVC      = [[RecordViewController alloc] init];
     recordVC.recordViewType             = RecordViewType_record;
@@ -102,10 +102,25 @@
 }
 - (void)onLiveButtonClicked
 {
+    [self popToNaviTootViewController];
     self.selectedIndex = 1;
+    
 }
 
 
+- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController {
+    
+    [self popToNaviTootViewController];
+    return YES;
+}
+
+- (void)popToNaviTootViewController {
+    UINavigationController *navi = self.viewControllers[self.selectedIndex];
+    if (navi.viewControllers.count &&
+        navi.viewControllers.count > 1) {   //存在多个 viewController
+        [navi popToRootViewControllerAnimated:NO];
+    }
+}
 
 
 

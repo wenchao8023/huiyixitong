@@ -28,6 +28,8 @@
     // Do any additional setup after loading the view.
     
     [self createUI];
+    
+    [self configTabelViewArgu];
 }
 
 - (void)createUI {
@@ -42,14 +44,17 @@
 - (MeetingLuanchTableView *)tableView {
     if (!_tableView) {
         MeetingLuanchTableView *tableView = [[MeetingLuanchTableView alloc] initWithFrame:self.contentView.bounds];
-        tableView.height -= 60;
+        tableView.height -= (kDefaultMargin + kDefaultCellHeight);
         [self.contentView addSubview:(_tableView = tableView)];
     }
     return _tableView;
 }
 
 - (void)luanchButton {
-    UIButton *luanchButton = [WCUIKitControl createButtonWithFrame:CGRectMake(kMarginView_horizontal, self.contentView.height - 60, self.contentView.width - 2 * kMarginView_horizontal, 50)
+    UIButton *luanchButton = [WCUIKitControl createButtonWithFrame:CGRectMake(kDefaultMargin,
+                                                                              self.contentView.height - kDefaultMargin - kDefaultCellHeight,
+                                                                              self.contentView.width - 2 * kDefaultMargin,
+                                                                              kDefaultCellHeight)
                                                             Target:self
                                                             Action:@selector(luanchMeetingAction)
                                                              Title:@"立即发起"];
@@ -58,13 +63,13 @@
                                                        textColor:WCWhite
                                                        charSpace:kAppKern_2]
                             forState:UIControlStateNormal];
-    WCViewBorder_Radius(luanchButton, 25);
+    WCViewBorder_Radius(luanchButton, kDefaultCellHeight / 2);
     [luanchButton setBackgroundColor:WCButtonColor];
     [self.contentView addSubview:luanchButton];
 }
 
 - (void)luanchMeetingAction {
-    WCLog(@"立即发起<!--%@--!>", [[self getTitle] substringFromIndex:1]);
+    WCLog(@"立即发起<!--%@--!>", [[self getTitle] substringFromIndex:2]);
 }
 
 #pragma mark - 判断视图类型
@@ -78,6 +83,25 @@
             break;
         case LuanchMeetingType_audio:
             return @"创建云直播会议";
+            break;
+        default:
+            break;
+    }
+}
+
+- (void)configTabelViewArgu {
+    switch (self.luanchMeetingType) {
+        case LuanchMeetingType_phone:
+            self.tableView.isHiddenHeader = NO;
+            self.tableView.MaxMembers = 6;
+            break;
+        case LuanchMeetingType_video:
+            self.tableView.isHiddenHeader = NO;
+            self.tableView.MaxMembers = 4;
+            break;
+        case LuanchMeetingType_audio:
+            self.tableView.isHiddenHeader = YES;
+            self.tableView.MaxMembers = 0;
             break;
         default:
             break;

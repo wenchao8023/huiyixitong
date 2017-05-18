@@ -8,6 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
+
+
+
 @interface MeetingLuanchTableView : UITableView
+
+
+@property (nonatomic, assign) BOOL isHiddenHeader;
+
+@property (nonatomic, assign) NSInteger MaxMembers;
+
+
 
 @end
