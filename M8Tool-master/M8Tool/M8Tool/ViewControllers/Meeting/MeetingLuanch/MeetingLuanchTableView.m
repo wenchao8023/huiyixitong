@@ -100,9 +100,21 @@
 }
 
 - (void)MeetingMembersCollectionContentHeight:(CGFloat)contentHeight {
-    [self.membersCollection setHeight:contentHeight];
-    [self.latestCollection setY:contentHeight];
-    [self.latestCollection setHeight:self.height - contentHeight];
+    
+    [UIView animateWithDuration:0.4 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        
+        [self.membersCollection setHeight:contentHeight];
+        [self.latestCollection setY:contentHeight];
+        [self.latestCollection setHeight:self.height - contentHeight];
+        
+    } completion:nil];
+//    [UIView animateWithDuration:0.2 animations:^{
+//        
+//    }];
+}
+
+- (void)MeetingMembersCollectionCurrentMembers:(NSInteger)currenMembers {
+    [self.latestCollection syncCurrentNumbers:currenMembers];
 }
 
 
@@ -178,11 +190,13 @@
 - (void)setIsHiddenHeader:(BOOL)isHiddenHeader {
     _isHiddenHeader = isHiddenHeader;
     self.tableFooterView.hidden = isHiddenHeader;
+#warning 在这里开始写直播界面
 }
 
 - (void)setMaxMembers:(NSInteger)MaxMembers {
     _MaxMembers = MaxMembers;
     self.tbFooterView.membersCollection.totalNumbers = _MaxMembers;
+    self.tbFooterView.latestCollection.totalNumbers  = _MaxMembers;
 }
 
 

@@ -15,7 +15,7 @@ typedef enum : NSInteger {
     
     LuanchMeetingType_phone = 0,
     LuanchMeetingType_video,
-    LuanchMeetingType_audio
+    LuanchMeetingType_live
     
 }LuanchMeetingType;
 

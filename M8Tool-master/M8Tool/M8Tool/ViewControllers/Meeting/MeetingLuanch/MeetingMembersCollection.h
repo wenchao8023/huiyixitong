@@ -16,15 +16,19 @@
  */
 @protocol MeetingMembersCollectionDelegate <NSObject>
 
+//返回当前删除的用户
 - (void)MeetingMembersCollectionSelectedMembers:(NSString *)delNameStr;
 
 - (void)MeetingMembersCollectionContentHeight:(CGFloat)contentHeight;
+//返回当前的成员数
+- (void)MeetingMembersCollectionCurrentMembers:(NSInteger)currenMembers;
 
 @end
 
+
+
 @interface MeetingMembersCollection : UICollectionView
 
-@property (nonatomic, assign) NSInteger currenNumbers;
 
 @property (nonatomic, assign) NSInteger totalNumbers;
 

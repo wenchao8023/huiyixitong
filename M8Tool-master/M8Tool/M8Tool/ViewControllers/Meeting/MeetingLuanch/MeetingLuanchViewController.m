@@ -81,7 +81,7 @@
         case LuanchMeetingType_video:
             return @"创建视频会议";
             break;
-        case LuanchMeetingType_audio:
+        case LuanchMeetingType_live:
             return @"创建云直播会议";
             break;
         default:
@@ -93,13 +93,13 @@
     switch (self.luanchMeetingType) {
         case LuanchMeetingType_phone:
             self.tableView.isHiddenHeader = NO;
-            self.tableView.MaxMembers = 6;
+            self.tableView.MaxMembers = 5;
             break;
         case LuanchMeetingType_video:
             self.tableView.isHiddenHeader = NO;
-            self.tableView.MaxMembers = 4;
+            self.tableView.MaxMembers = 3;
             break;
-        case LuanchMeetingType_audio:
+        case LuanchMeetingType_live:
             self.tableView.isHiddenHeader = YES;
             self.tableView.MaxMembers = 0;
             break;

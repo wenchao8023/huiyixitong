@@ -15,6 +15,23 @@
     return (AppDelegate *)[UIApplication sharedApplication].delegate;
 }
 
++ (UIAlertController *)showAlertWithTitle:(NSString *)title
+                                  message:(NSString *)msg
+                                  okTitle:(NSString *)okTitle
+                              cancelTitle:(NSString *)cancelTitle
+                                       ok:(ActionHandle)succ
+                                   cancel:(ActionHandle)fail
+{
+    return [self showAlert:[[AppDelegate sharedAppDelegate] topViewController]
+                     title:title
+                   message:msg
+                   okTitle:okTitle
+               cancelTitle:cancelTitle
+                        ok:succ
+                    cancel:fail];
+}
+
+
 + (UIAlertController *)showAlert:(UIViewController *)rootVC title:(NSString *)title message:(NSString *)msg okTitle:(NSString *)okTitle cancelTitle:(NSString *)cancelTitle ok:(ActionHandle)succ cancel:(ActionHandle)fail
 {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:msg preferredStyle:UIAlertControllerStyleAlert];

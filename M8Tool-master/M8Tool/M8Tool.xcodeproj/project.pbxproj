@@ -102,6 +102,7 @@
 		946753DA1EBC1F3E00653A2C /* RegistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 946753D81EBC1F3E00653A2C /* RegistViewController.m */; };
 		946753E01EBC237F00653A2C /* WCUIKitControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 946753DF1EBC237F00653A2C /* WCUIKitControl.m */; };
 		946753E31EBC24A900653A2C /* AppDelegate+ControlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 946753E21EBC24A900653A2C /* AppDelegate+ControlViewController.m */; };
+		94856D041ECEFF15000DC5F8 /* ModifyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94856D031ECEFF15000DC5F8 /* ModifyViewController.m */; };
 		9497DF251ECA95FD009C35CB /* UserCardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9497DF211ECA95FD009C35CB /* UserCardViewController.m */; };
 		9497DF261ECA95FD009C35CB /* UsrCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9497DF231ECA95FD009C35CB /* UsrCardView.m */; };
 		9497DF271ECA95FD009C35CB /* UsrCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9497DF241ECA95FD009C35CB /* UsrCardView.xib */; };
@@ -324,6 +325,8 @@
 		946753DF1EBC237F00653A2C /* WCUIKitControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WCUIKitControl.m; path = ../WCUIKitControl.m; sourceTree = "<group>"; };
 		946753E11EBC24A900653A2C /* AppDelegate+ControlViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppDelegate+ControlViewController.h"; sourceTree = "<group>"; };
 		946753E21EBC24A900653A2C /* AppDelegate+ControlViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppDelegate+ControlViewController.m"; sourceTree = "<group>"; };
+		94856D021ECEFF15000DC5F8 /* ModifyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModifyViewController.h; sourceTree = "<group>"; };
+		94856D031ECEFF15000DC5F8 /* ModifyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModifyViewController.m; sourceTree = "<group>"; };
 		9497DF201ECA95FD009C35CB /* UserCardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserCardViewController.h; sourceTree = "<group>"; };
 		9497DF211ECA95FD009C35CB /* UserCardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserCardViewController.m; sourceTree = "<group>"; };
 		9497DF221ECA95FD009C35CB /* UsrCardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UsrCardView.h; sourceTree = "<group>"; };
@@ -973,6 +976,8 @@
 				94C06F3F1EBC512900336E5F /* MainTabBarController.m */,
 				94081B4F1EC471290079583C /* BaseViewController.h */,
 				94081B501EC471290079583C /* BaseViewController.m */,
+				94856D021ECEFF15000DC5F8 /* ModifyViewController.h */,
+				94856D031ECEFF15000DC5F8 /* ModifyViewController.m */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -1389,6 +1394,7 @@
 				946753E01EBC237F00653A2C /* WCUIKitControl.m in Sources */,
 				94A5025F1E95DFF900F675B2 /* JSONKit.m in Sources */,
 				94DE958D1EAE145400A44DB1 /* UIView+ShakeAnimation.m in Sources */,
+				94856D041ECEFF15000DC5F8 /* ModifyViewController.m in Sources */,
 				944AF3161E9494C00044B44C /* UIProgressView+AFNetworking.m in Sources */,
 				94E4CD541E963E7F00C3C6BF /* CreateRoomRequest.m in Sources */,
 				94BDE5281ECC494000ECC089 /* MeetingContactViewController.m in Sources */,

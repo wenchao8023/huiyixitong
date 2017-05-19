@@ -15,7 +15,6 @@
 #define kItemWidth (self.width - 60) / 5
 
 
-
 static NSString *CollectionHeaderID = @"MeetingMembersCollectionHeaderID";
 
 
@@ -23,6 +22,8 @@ static NSString *CollectionHeaderID = @"MeetingMembersCollectionHeaderID";
 
 
 ///////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark - MembersCollectionHeader
 @interface MembersCollectionHeader : UICollectionReusableView
 
 @end
@@ -59,18 +60,19 @@ static NSString *CollectionHeaderID = @"MeetingMembersCollectionHeaderID";
 }
 
 @end
+#pragma mark -
 ///////////////////////////////////////////////////////////////
 
 
 
 
-
+#pragma mark - MeetingMembersCollection
 @interface MeetingMembersCollection ()<UICollectionViewDataSource, UICollectionViewDelegate>
 
 @property (nonatomic, strong) NSMutableArray *dataMembersArray;
 
 @property (nonatomic, assign) BOOL isDeling;
-@property (nonatomic, assign) BOOL isAdding;
+
 
 @end
 
@@ -80,7 +82,7 @@ static NSString *CollectionHeaderID = @"MeetingMembersCollectionHeaderID";
 @implementation MeetingMembersCollection
 
 
-
+#pragma mark - init
 - (instancetype)initWithFrame:(CGRect)frame collectionViewLayout:(UICollectionViewLayout *)layout {
     if (self = [super initWithFrame:frame collectionViewLayout:layout]) {
         self.backgroundColor = WCClear;
@@ -113,25 +115,12 @@ static NSString *CollectionHeaderID = @"MeetingMembersCollectionHeaderID";
     return _dataMembersArray;
 }
 
-- (void)syncDataMembersArrayWithDic:(NSDictionary *)memberInfo {
+-(void)dealloc {
     
-    if (self.isDeling) {
-        self.isDeling = NO;
-    }
-    
-    NSString *identifier    = [[memberInfo allKeys] firstObject];
-    NSString *statu         = [[memberInfo allValues] firstObject];
-    if ([statu isEqualToString:@"1"]) {
-        [self.dataMembersArray addObject:identifier];   // 这里使用 addObject<NSMutableArray> 不会触发 KVO
-    }
-    else {
-        if ([self.dataMembersArray containsObject:identifier]) {
-            [self.dataMembersArray removeObject:identifier];    // 这里使用 removeObject<NSMutableArray> 不会触发 KVO
-        }
-    }
-    
-    [self reloadData];
+    [self removeObserver:self forKeyPath:@"dataMembersArray" context:NULL];
+    [self removeObserver:self forKeyPath:@"contentSize" context:NULL];
 }
+
 
 #pragma mark - UICollectionViewDelegate
 
@@ -174,7 +163,8 @@ static NSString *CollectionHeaderID = @"MeetingMembersCollectionHeaderID";
         MembersCollectionHeader *header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader
                                                                              withReuseIdentifier:CollectionHeaderID
                                                                                     forIndexPath:indexPath];
-        [header setNumbersWithCurrentNumbers:self.currenNumbers totalNumbers:self.totalNumbers];
+        [header setNumbersWithCurrentNumbers:self.dataMembersArray.count
+                                totalNumbers:self.totalNumbers];
         return header;
     }
     return nil;
@@ -216,10 +206,23 @@ static NSString *CollectionHeaderID = @"MeetingMembersCollectionHeaderID";
 }
 
 - (void)inviteMembersFromContact {
-    MeetingContactViewController *contactVC = [[MeetingContactViewController alloc] init];
-    contactVC.contactType = ContactType_contact;
-    contactVC.isExitLeftItem = YES;
-    [[AppDelegate sharedAppDelegate] pushViewController:contactVC];
+    if (self.dataMembersArray.count < self.totalNumbers)
+    {
+        MeetingContactViewController *contactVC = [[MeetingContactViewController alloc] init];
+        contactVC.contactType = ContactType_contact;
+        contactVC.isExitLeftItem = YES;
+        [[AppDelegate sharedAppDelegate] pushViewController:contactVC];
+    }
+    else
+    {
+        [AppDelegate showAlertWithTitle:@"温馨提示"
+                                message:[NSString stringWithFormat:@"最多只能邀请: %ld 人", self.totalNumbers]
+                                okTitle:@"确定"
+                            cancelTitle:nil
+                                     ok:nil
+                                 cancel:nil];
+    }
+    
 }
 
 
@@ -228,26 +231,47 @@ static NSString *CollectionHeaderID = @"MeetingMembersCollectionHeaderID";
     // 监听数组元素的变化
     if ([keyPath isEqualToString:@"dataMembersArray"]) {
         WCLog(@"dataMembersArray is changing");
+        
         if (!self.dataMembersArray.count) {
             self.isDeling = NO;
+        }
+        
+        if ([self.WCDelegate respondsToSelector:@selector(MeetingMembersCollectionCurrentMembers:)]) {
+            [self.WCDelegate MeetingMembersCollectionCurrentMembers:self.dataMembersArray.count];
         }
     }
     
     // 监听 contentSize
     if ([keyPath isEqualToString:@"contentSize"]) {
-        WCLog(@"contentSize is changing\n contentHeight is %g", self.contentSize.height);
-//        [self setHeight:self.contentSize.height];
         if ([self.WCDelegate respondsToSelector:@selector(MeetingMembersCollectionContentHeight:)]) {
             [self.WCDelegate MeetingMembersCollectionContentHeight:self.contentSize.height];
         }
     }
 }
 
--(void)dealloc {
+
+#pragma mark - public function
+// 同步从最近联系人发来的数据
+- (void)syncDataMembersArrayWithDic:(NSDictionary *)memberInfo {
     
-    [self removeObserver:self forKeyPath:@"dataMembersArray" context:NULL];
-    [self removeObserver:self forKeyPath:@"contentSize" context:NULL];
+    if (self.isDeling) {
+        self.isDeling = NO;
+    }
+    
+    NSString *identifier    = [[memberInfo allKeys] firstObject];
+    NSString *statu         = [[memberInfo allValues] firstObject];
+    if ([statu isEqualToString:@"1"]) {
+        [[self mutableArrayValueForKey:@"dataMembersArray"] addObject:identifier];
+    }
+    else {
+        if ([self.dataMembersArray containsObject:identifier]) {
+            [[self mutableArrayValueForKey:@"dataMembersArray"] removeObject:identifier];
+        }
+    }
+    
+    [self reloadData];
 }
+
 
 
 @end
