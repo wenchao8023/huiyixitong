@@ -17,4 +17,10 @@
  */
 @interface MeetingMembersCell : UICollectionViewCell
 
+#pragma mark - 配置 参会人员
+- (void)configMeetingMembersWithNameStr:(NSString *)nameStr isDeling:(BOOL)isDeling ;
+- (void)configMeetingMembersWithImageStr:(NSString *)imageStr ;
+
+#pragma mark - 配置 最近联系人
+- (void)configLatestMembersWithNameStr:(NSString *)nameStr isSelected:(BOOL)isSelected ;
 @end

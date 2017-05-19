@@ -9,8 +9,19 @@
 #import "MeetingMembersCollection.h"
 #import "MeetingMembersCell.h"
 
+#import "MeetingContactViewController.h"
+
+
+#define kItemWidth (self.width - 60) / 5
+
+
 
 static NSString *CollectionHeaderID = @"MeetingMembersCollectionHeaderID";
+
+
+
+
+
 ///////////////////////////////////////////////////////////////
 @interface MembersCollectionHeader : UICollectionReusableView
 
@@ -51,9 +62,15 @@ static NSString *CollectionHeaderID = @"MeetingMembersCollectionHeaderID";
 ///////////////////////////////////////////////////////////////
 
 
+
+
+
 @interface MeetingMembersCollection ()<UICollectionViewDataSource, UICollectionViewDelegate>
 
-//@property (nonatomic, strong) MembersCollectionHeader *collectionHeader;
+@property (nonatomic, strong) NSMutableArray *dataMembersArray;
+
+@property (nonatomic, assign) BOOL isDeling;
+@property (nonatomic, assign) BOOL isAdding;
 
 @end
 
@@ -61,6 +78,8 @@ static NSString *CollectionHeaderID = @"MeetingMembersCollectionHeaderID";
 
 
 @implementation MeetingMembersCollection
+
+
 
 - (instancetype)initWithFrame:(CGRect)frame collectionViewLayout:(UICollectionViewLayout *)layout {
     if (self = [super initWithFrame:frame collectionViewLayout:layout]) {
@@ -72,22 +91,81 @@ static NSString *CollectionHeaderID = @"MeetingMembersCollectionHeaderID";
         [self registerClass:[MembersCollectionHeader class]
  forSupplementaryViewOfKind:UICollectionElementKindSectionHeader
         withReuseIdentifier:CollectionHeaderID];
+        
+        [self addObserver:self forKeyPath:@"dataMembersArray" options:NSKeyValueObservingOptionNew context:NULL];
+        [self addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:NULL];
     }
     return self;
 }
 
 
+/**
+ * 对于参会成员数据处理
+ *  不会将最后两个 item 元素添加进数组
+ *  只保存参会成员信息
+ *
+ *  刚进来的时候数组是空的，用户可以选择最近联系人中的元素添加，也可以选择通讯录中的人来添加
+ */
+- (NSMutableArray *)dataMembersArray {
+    if (!_dataMembersArray) {
+        _dataMembersArray = [NSMutableArray arrayWithCapacity:0];
+    }
+    return _dataMembersArray;
+}
+
+- (void)syncDataMembersArrayWithDic:(NSDictionary *)memberInfo {
+    
+    if (self.isDeling) {
+        self.isDeling = NO;
+    }
+    
+    NSString *identifier    = [[memberInfo allKeys] firstObject];
+    NSString *statu         = [[memberInfo allValues] firstObject];
+    if ([statu isEqualToString:@"1"]) {
+        [self.dataMembersArray addObject:identifier];   // 这里使用 addObject<NSMutableArray> 不会触发 KVO
+    }
+    else {
+        if ([self.dataMembersArray containsObject:identifier]) {
+            [self.dataMembersArray removeObject:identifier];    // 这里使用 removeObject<NSMutableArray> 不会触发 KVO
+        }
+    }
+    
+    [self reloadData];
+}
 
 #pragma mark - UICollectionViewDelegate
+
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    
-    return 20;
+    if (self.dataMembersArray &&
+        self.dataMembersArray.count)
+    {  //数组中至少有一个元素
+        return self.dataMembersArray.count + 2;
+    }
+    else
+    {  // 数组中没有元素，只显示一个添加按钮
+        return 1;
+    }
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    
     MeetingMembersCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MeetingMembersCellID" forIndexPath:indexPath];
-    cell.backgroundColor = WCBlack;
-    WCViewBorder_Radius(cell, self.width / 8);
+    WCViewBorder_Radius(cell, kItemWidth / 2);
+    cell.backgroundColor = [UIColor colorWithRed:0.05 green:0.43 blue:0.4 alpha:1];
+    if (self.dataMembersArray &&
+        self.dataMembersArray.count)
+    {   //数组中至少有一个元素
+        if (indexPath.row < self.dataMembersArray.count)
+            [cell configMeetingMembersWithNameStr:self.dataMembersArray[indexPath.row] isDeling:self.isDeling];
+        else if (indexPath.row == self.dataMembersArray.count)
+            [cell configMeetingMembersWithImageStr:@"addMember"];
+        else
+            [cell configMeetingMembersWithImageStr:@"delMember"];
+    }
+    else
+    {  // 数组中没有元素，只显示一个添加按钮
+        [cell configMeetingMembersWithImageStr:@"addMember"];
+    }
     return cell;
 }
 
@@ -100,6 +178,75 @@ static NSString *CollectionHeaderID = @"MeetingMembersCollectionHeaderID";
         return header;
     }
     return nil;
+}
+
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (self.dataMembersArray &&
+        self.dataMembersArray.count)    //数组中至少有一个元素
+    {
+        if (indexPath.row < self.dataMembersArray.count)    // 选择成员
+        {
+            if (self.isDeling)  // 正在删除中
+            {
+//                [self.dataMembersArray removeObjectAtIndex:indexPath.row];
+                if ([self.WCDelegate respondsToSelector:@selector(MeetingMembersCollectionSelectedMembers:)]) {
+                    [self.WCDelegate MeetingMembersCollectionSelectedMembers:self.dataMembersArray[indexPath.row]];
+                }
+                [[self mutableArrayValueForKey:@"dataMembersArray"] removeObjectAtIndex:indexPath.row];
+            }
+        }
+        else if (indexPath.row == self.dataMembersArray.count)   // 选择添加
+        {
+            self.isDeling = NO;
+            [self inviteMembersFromContact];
+        }
+        else    //选择删除
+        {
+            self.isDeling = !self.isDeling;
+        }
+    }
+    else    // 数组中没有元素，只显示一个添加按钮
+    {
+        [self inviteMembersFromContact];
+    }
+
+    [collectionView reloadData];
+}
+
+- (void)inviteMembersFromContact {
+    MeetingContactViewController *contactVC = [[MeetingContactViewController alloc] init];
+    contactVC.contactType = ContactType_contact;
+    contactVC.isExitLeftItem = YES;
+    [[AppDelegate sharedAppDelegate] pushViewController:contactVC];
+}
+
+
+#pragma mark - KVO
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+    // 监听数组元素的变化
+    if ([keyPath isEqualToString:@"dataMembersArray"]) {
+        WCLog(@"dataMembersArray is changing");
+        if (!self.dataMembersArray.count) {
+            self.isDeling = NO;
+        }
+    }
+    
+    // 监听 contentSize
+    if ([keyPath isEqualToString:@"contentSize"]) {
+        WCLog(@"contentSize is changing\n contentHeight is %g", self.contentSize.height);
+//        [self setHeight:self.contentSize.height];
+        if ([self.WCDelegate respondsToSelector:@selector(MeetingMembersCollectionContentHeight:)]) {
+            [self.WCDelegate MeetingMembersCollectionContentHeight:self.contentSize.height];
+        }
+    }
+}
+
+-(void)dealloc {
+    
+    [self removeObserver:self forKeyPath:@"dataMembersArray" context:NULL];
+    [self removeObserver:self forKeyPath:@"contentSize" context:NULL];
 }
 
 

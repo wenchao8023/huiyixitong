@@ -16,10 +16,40 @@
 
 
 
+#define kItemWidth (self.width - 60) / 5
+#define kSectionHeight 40
+
+
+
+/*************************************************/
+// CollectionView 的 flowLayout
+@interface MyFlowLayout : UICollectionViewFlowLayout
+
+
+@end
+
+@implementation MyFlowLayout
+
+- (instancetype)initWithHeaderSize:(CGSize)headerSize itemSize:(CGSize)itemSize {
+    if (self = [super init]) {
+        self.sectionHeadersPinToVisibleBounds = YES;
+        self.minimumLineSpacing = 10;
+        self.minimumInteritemSpacing = 10;
+        self.sectionInset = UIEdgeInsetsMake(0, 10, 0, 10);
+        self.headerReferenceSize = headerSize;
+        self.itemSize = itemSize;
+        self.scrollDirection = UICollectionViewScrollDirectionVertical;
+    }
+    return self;
+}
+@end
+/*************************************************/
+
 
 
 ///////////////////////////////////////////////////
-@interface TBFooterView : UIView
+// tableView 的 footerView: LatestMembersCollection + MeetingMembersCollection
+@interface TBFooterView : UIView<MeetingMembersCollectionDelegate, LatestMembersCollectionDelegate>
 
 @property (nonatomic, strong) LatestMembersCollection   *latestCollection;
 @property (nonatomic, strong) MeetingMembersCollection  *membersCollection;
@@ -31,31 +61,57 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        [self addSubview:self.membersCollection];
         
-        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-        layout.headerReferenceSize = CGSizeMake(self.width, 40);
-        layout.itemSize = CGSizeMake(self.width / 4, self.width / 4);
-        layout.sectionHeadersPinToVisibleBounds = YES;
-        layout.minimumLineSpacing = 0;
-        layout.minimumInteritemSpacing = 0;
-        
-        
-        
-        CGRect membersFrame = self.bounds;
-        membersFrame.size.height = 40 + self.width / 4;
-        self.membersCollection = [[MeetingMembersCollection alloc] initWithFrame:membersFrame collectionViewLayout:layout];
-        [self addSubview:self.membersCollection];
-        
-        CGRect latestFrame = self.bounds;
-        latestFrame.origin.y = CGRectGetMaxY(self.membersCollection.frame);
-        latestFrame.size.height -= CGRectGetMaxY(self.membersCollection.frame);
-        self.latestCollection = [[LatestMembersCollection alloc] initWithFrame:latestFrame collectionViewLayout:layout];
-        [self addSubview:self.latestCollection];
+        [self membersCollection];
+        self.membersCollection.WCDelegate   = self;
+        [self latestCollection];
+        self.latestCollection.WCDelegate    = self;
     }
     return self;
 }
 
+- (MeetingMembersCollection *)membersCollection {
+    if (!_membersCollection) {
+        CGRect membersFrame = self.bounds;
+        membersFrame.size.height = kSectionHeight + kItemWidth;
+        MeetingMembersCollection *membersCollection = [[MeetingMembersCollection alloc] initWithFrame:membersFrame
+                                                                                 collectionViewLayout:[[MyFlowLayout alloc] initWithHeaderSize:CGSizeMake(self.width, kSectionHeight)
+                                                                                                                                      itemSize:CGSizeMake(kItemWidth, kItemWidth)]];
+        [self addSubview:(_membersCollection = membersCollection)];
+    }
+    return _membersCollection;
+}
+
+- (LatestMembersCollection *)latestCollection {
+    if (!_latestCollection) {
+        CGRect latestFrame = self.bounds;
+        latestFrame.origin.y    = CGRectGetMaxY(self.membersCollection.frame);
+        latestFrame.size.height -= CGRectGetMaxY(self.membersCollection.frame);
+        LatestMembersCollection *latestCollection = [[LatestMembersCollection alloc] initWithFrame:latestFrame
+                                                                                 collectionViewLayout:[[MyFlowLayout alloc] initWithHeaderSize:CGSizeMake(self.width, kSectionHeight)
+                                                                                                                                      itemSize:CGSizeMake(kItemWidth, kItemWidth)]];
+        [self addSubview:(_latestCollection = latestCollection)];
+    }
+    return _latestCollection;
+}
+
+- (void)MeetingMembersCollectionSelectedMembers:(NSString *)delNameStr {
+    [self.latestCollection syncDataMembersArrayWithIdentifier:delNameStr];
+}
+
+- (void)MeetingMembersCollectionContentHeight:(CGFloat)contentHeight {
+    [self.membersCollection setHeight:contentHeight];
+    [self.latestCollection setY:contentHeight];
+    [self.latestCollection setHeight:self.height - contentHeight];
+}
+
+
+
+
+- (void)LatestMembersCollectionDidSelectedMembers:(NSDictionary *)memberInfo {
+    WCLog(@"The Member %@'s statu is %@", [[memberInfo allKeys] firstObject], [[memberInfo allValues] firstObject]);
+    [self.membersCollection syncDataMembersArrayWithDic:memberInfo];
+}
 @end
 ///////////////////////////////////////////////////
 
@@ -65,10 +121,12 @@
 
 @interface MeetingLuanchTableView()<UITableViewDelegate, UITableViewDataSource>
 
-//@property (nonatomic, strong) MeetingMembersCollection *membersCollection;
+
 
 @property (nonatomic, strong) NSMutableArray *dataItemArray;
 @property (nonatomic, strong) NSMutableArray *dataContentArray;
+
+@property (nonatomic, strong) TBFooterView *tbFooterView;
 
 @end
 
@@ -85,12 +143,18 @@
         self.delegate   = self;
         self.dataSource = self;
         self.separatorStyle = UITableViewCellSeparatorStyleNone;
-//        self.tableFooterView = self.membersCollection;
         CGRect footerFrame = self.bounds;
         footerFrame.size.height -= 89;
-        self.tableFooterView = [[TBFooterView alloc] initWithFrame:footerFrame];
+        self.tableFooterView = self.tbFooterView;
     }
     return self;
+}
+
+- (TBFooterView *)tbFooterView {
+    if (!_tbFooterView) {
+        _tbFooterView = [[TBFooterView alloc] initWithFrame:self.bounds];
+    }
+    return _tbFooterView;
 }
 
 - (NSMutableArray *)dataItemArray {
@@ -118,6 +182,7 @@
 
 - (void)setMaxMembers:(NSInteger)MaxMembers {
     _MaxMembers = MaxMembers;
+    self.tbFooterView.membersCollection.totalNumbers = _MaxMembers;
 }
 
 
