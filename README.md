@@ -1,6 +1,5 @@
 # README
 
-###### 费劲千辛之万苦终于把你拆了然后送上了法庭
 
 ![frameworks目录结构](https://github.com/wenchao8023/huiyixitong/blob/master/屏幕快照%202017-04-11%2018.16.43.png?raw=true)
 

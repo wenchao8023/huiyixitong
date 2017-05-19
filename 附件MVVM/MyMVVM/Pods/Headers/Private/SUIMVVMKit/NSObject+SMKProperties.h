@@ -1,0 +1,1 @@
+../../../SUIMVVMKit/SUIMVVMKit/SUIMVVMKit/NSObject+SMKProperties.h

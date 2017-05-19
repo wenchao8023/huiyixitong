@@ -1,0 +1,1 @@
+../../../SUIMVVMKit/SUIMVVMKit/SUIMVVMKit/UICollectionViewCell+SMKConfigure.h

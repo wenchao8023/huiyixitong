@@ -1,0 +1,14 @@
+platform :ios,'10.0'
+target 'MyMVVM' do
+pod 'AFNetworking'
+pod 'FDFullscreenPopGesture'
+pod 'FMDB'
+pod 'LxDBAnything'
+pod 'Masonry'
+pod 'MJExtension'
+pod 'MJRefresh'
+pod 'SDWebImage'
+pod 'SUIMVVMKit'
+pod 'SVProgressHUD'
+end
+

@@ -57,6 +57,7 @@
 #define kColorLightGray  RGBOF(0xF3F3F3)
 
 
+
 /******************** font ********************************/
 #define kAppLargeTextFont       [UIFont systemFontOfSize:17]
 #define kAppMiddleTextFont      [UIFont systemFontOfSize:15]
