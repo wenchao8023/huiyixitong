@@ -95,6 +95,18 @@ static NSString *CollectionHeaderID = @"LatestMembersCollectionHeaderID";
         [_dataMembersArray addObject:@"女友10"];
         [_dataMembersArray addObject:@"女友11"];
         [_dataMembersArray addObject:@"女友12"];
+        [_dataMembersArray addObject:@"女友1"];
+        [_dataMembersArray addObject:@"女友2"];
+        [_dataMembersArray addObject:@"女友3"];
+        [_dataMembersArray addObject:@"女友4"];
+        [_dataMembersArray addObject:@"女友5"];
+        [_dataMembersArray addObject:@"女友6"];
+        [_dataMembersArray addObject:@"女友7"];
+        [_dataMembersArray addObject:@"女友8"];
+        [_dataMembersArray addObject:@"女友9"];
+        [_dataMembersArray addObject:@"女友10"];
+        [_dataMembersArray addObject:@"女友11"];
+        [_dataMembersArray addObject:@"女友12"];
     }
     return _dataMembersArray;
 }
@@ -145,7 +157,7 @@ static NSString *CollectionHeaderID = @"LatestMembersCollectionHeaderID";
             [self.statusArray replaceObjectAtIndex:indexPath.row withObject:@"1"];
         } else {
             [AppDelegate showAlertWithTitle:@"温馨提示"
-                                    message:[NSString stringWithFormat:@"最多只能邀请: %ld 人", self.totalNumbers]
+                                    message:[NSString stringWithFormat:@"最多只能邀请: %ld 人", (long)self.totalNumbers]
                                     okTitle:@"确定"
                                 cancelTitle:nil
                                          ok:nil

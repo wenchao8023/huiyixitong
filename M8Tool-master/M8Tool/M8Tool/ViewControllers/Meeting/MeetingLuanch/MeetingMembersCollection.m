@@ -216,7 +216,7 @@ static NSString *CollectionHeaderID = @"MeetingMembersCollectionHeaderID";
     else
     {
         [AppDelegate showAlertWithTitle:@"温馨提示"
-                                message:[NSString stringWithFormat:@"最多只能邀请: %ld 人", self.totalNumbers]
+                                message:[NSString stringWithFormat:@"最多只能邀请: %ld 人", (long)self.totalNumbers]
                                 okTitle:@"确定"
                             cancelTitle:nil
                                      ok:nil

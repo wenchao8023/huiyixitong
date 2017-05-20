@@ -391,13 +391,20 @@
     textField.secureTextEntry = secureTextEntry;
     textField.borderStyle = borderStyle;
     textField.keyboardType = keyboardType;
-    textField.leftView = leftImageView;       //左图片
-    textField.leftViewMode = leftViewMode;
-    textField.rightView = rightImageView;     //右图片
-    textField.rightViewMode = rightViewMode;
-    textField.inputView = inputView;          //自定义键盘
-    textField.autocapitalizationType = NO;    //关闭首字母大写
-    textField.clearButtonMode = YES;          //清除按钮
+//    [textField becomeFirstResponder];
+    if (leftImageView) {
+        textField.leftView = leftImageView;         //左图片
+        textField.leftViewMode = leftViewMode;
+    }
+    if (rightImageView) {
+        textField.rightView = rightImageView;       //右图片
+        textField.rightViewMode = rightViewMode;
+    }
+    if (inputView) {
+        textField.inputView = inputView;            //自定义键盘
+    }
+    textField.autocapitalizationType = NO;          //关闭首字母大写
+    textField.clearButtonMode = YES;                //清除按钮
     return textField;
 }
 

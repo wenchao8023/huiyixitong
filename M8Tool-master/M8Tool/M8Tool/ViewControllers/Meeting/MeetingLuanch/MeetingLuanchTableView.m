@@ -15,14 +15,40 @@
 
 
 
-
 #define kItemWidth (self.width - 60) / 5
 #define kSectionHeight 40
 
 
 
+
+
+///////////////////////////////////////////////////
+#pragma mark - header image in live_type
+@interface TBheaderView : UIImageView
+
+@end
+
+
+@implementation TBheaderView
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        
+    }
+    return self;
+}
+
+@end
+///////////////////////////////////////////////////
+
+
+
+
+
+
+
+
 /*************************************************/
-// CollectionView 的 flowLayout
+#pragma mark - CollectionView >  flowLayout
 @interface MyFlowLayout : UICollectionViewFlowLayout
 
 
@@ -48,7 +74,7 @@
 
 
 ///////////////////////////////////////////////////
-// tableView 的 footerView: LatestMembersCollection + MeetingMembersCollection
+#pragma mark - tableView > footerView: LatestMembersCollection + MeetingMembersCollection
 @interface TBFooterView : UIView<MeetingMembersCollectionDelegate, LatestMembersCollectionDelegate>
 
 @property (nonatomic, strong) LatestMembersCollection   *latestCollection;
@@ -64,6 +90,7 @@
         
         [self membersCollection];
         self.membersCollection.WCDelegate   = self;
+        
         [self latestCollection];
         self.latestCollection.WCDelegate    = self;
     }
@@ -108,9 +135,6 @@
         [self.latestCollection setHeight:self.height - contentHeight];
         
     } completion:nil];
-//    [UIView animateWithDuration:0.2 animations:^{
-//        
-//    }];
 }
 
 - (void)MeetingMembersCollectionCurrentMembers:(NSInteger)currenMembers {
@@ -130,8 +154,8 @@
 
 
 
-
-@interface MeetingLuanchTableView()<UITableViewDelegate, UITableViewDataSource>
+#pragma mark - main class
+@interface MeetingLuanchTableView()<UITableViewDelegate, UITableViewDataSource, ModifyViewDelegate>
 
 
 
@@ -139,7 +163,7 @@
 @property (nonatomic, strong) NSMutableArray *dataContentArray;
 
 @property (nonatomic, strong) TBFooterView *tbFooterView;
-
+@property (nonatomic, strong) TBheaderView *tbheaderView;
 @end
 
 
@@ -155,8 +179,7 @@
         self.delegate   = self;
         self.dataSource = self;
         self.separatorStyle = UITableViewCellSeparatorStyleNone;
-        CGRect footerFrame = self.bounds;
-        footerFrame.size.height -= 89;
+        
         self.tableFooterView = self.tbFooterView;
     }
     return self;
@@ -164,10 +187,24 @@
 
 - (TBFooterView *)tbFooterView {
     if (!_tbFooterView) {
-        _tbFooterView = [[TBFooterView alloc] initWithFrame:self.bounds];
+        CGRect footerFrame = self.bounds;
+        footerFrame.size.height -= 89;
+        _tbFooterView = [[TBFooterView alloc] initWithFrame:footerFrame];
     }
     return _tbFooterView;
 }
+
+- (TBheaderView *)tbheaderView {
+    if (!_tbheaderView) {
+        CGRect frame = self.bounds;
+        frame.size.height /= 2;
+        _tbheaderView = [[TBheaderView alloc] initWithFrame:frame];
+        _tbheaderView.image = [UIImage imageNamed:@"defaul_publishcover"];
+    }
+    return _tbheaderView;
+}
+
+
 
 - (NSMutableArray *)dataItemArray {
     if (!_dataItemArray) {
@@ -187,10 +224,13 @@
 
 
 #pragma mark - setter
-- (void)setIsHiddenHeader:(BOOL)isHiddenHeader {
-    _isHiddenHeader = isHiddenHeader;
-    self.tableFooterView.hidden = isHiddenHeader;
-#warning 在这里开始写直播界面
+- (void)setIsHiddenFooter:(BOOL)isHiddenFooter {
+    _isHiddenFooter = isHiddenFooter;
+    self.tableFooterView.hidden = isHiddenFooter;
+
+    if (isHiddenFooter) {
+        self.tableHeaderView = [self tbheaderView];
+    }
 }
 
 - (void)setMaxMembers:(NSInteger)MaxMembers {
@@ -219,7 +259,7 @@
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    if (self.isHiddenHeader)
+    if (self.isHiddenFooter)
         return [WCUIKitControl createViewWithFrame:CGRectZero BgColor:WCClear];
     else
         return [WCUIKitControl createViewWithFrame:CGRectZero BgColor:[UIColor colorWithRed:0.84 green:0.82 blue:0.79 alpha:1]];
@@ -229,7 +269,25 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row == 0) {
+        ModifyViewController *modifyVC = [[ModifyViewController alloc] init];
+        modifyVC.isExitLeftItem = YES;
+        modifyVC.headerTitle = self.dataItemArray[indexPath.row];
+        modifyVC.originContent = self.dataContentArray[indexPath.row];
+        modifyVC.modifyType = Modify_text;
+        modifyVC.WCDelegate = self;
+        [[AppDelegate sharedAppDelegate] pushViewController:modifyVC];
+    }
+}
+
+
+#pragma mark - ModifyViewDelegate
+- (void)modifyViewMofifyInfo:(NSDictionary *)modifyInfo {
+    if ([[[modifyInfo allKeys] firstObject] isEqualToString:@"text"]) {
+        [self.dataContentArray replaceObjectAtIndex:0 withObject:[modifyInfo objectForKey:@"text"]];
+    }
     
+    [self reloadData];
 }
 
 

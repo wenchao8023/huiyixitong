@@ -92,15 +92,15 @@
 - (void)configTabelViewArgu {
     switch (self.luanchMeetingType) {
         case LuanchMeetingType_phone:
-            self.tableView.isHiddenHeader = NO;
+            self.tableView.isHiddenFooter = NO;
             self.tableView.MaxMembers = 5;
             break;
         case LuanchMeetingType_video:
-            self.tableView.isHiddenHeader = NO;
+            self.tableView.isHiddenFooter = NO;
             self.tableView.MaxMembers = 3;
             break;
         case LuanchMeetingType_live:
-            self.tableView.isHiddenHeader = YES;
+            self.tableView.isHiddenFooter = YES;
             self.tableView.MaxMembers = 0;
             break;
         default:

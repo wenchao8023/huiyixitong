@@ -14,7 +14,7 @@
 @interface MeetingLuanchTableView : UITableView
 
 
-@property (nonatomic, assign) BOOL isHiddenHeader;
+@property (nonatomic, assign) BOOL isHiddenFooter;
 
 @property (nonatomic, assign) NSInteger MaxMembers;
 
