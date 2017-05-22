@@ -1,18 +1,18 @@
 //
-//  MeetingContactViewController.m
+//  UserContactViewController.m
 //  M8Tool
 //
-//  Created by chao on 2017/5/17.
+//  Created by chao on 2017/5/22.
 //  Copyright © 2017年 ibuildtek. All rights reserved.
 //
 
-#import "MeetingContactViewController.h"
+#import "UserContactViewController.h"
 
-@interface MeetingContactViewController ()
+@interface UserContactViewController ()
 
 @end
 
-@implementation MeetingContactViewController
+@implementation UserContactViewController
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -26,6 +26,7 @@
     // Do any additional setup after loading the view.
 }
 
+
 #pragma mark - 判断视图类型
 - (NSString *)getTitle {
     switch (self.contactType) {
@@ -35,7 +36,11 @@
         case ContactType_contact:
             return @"通讯录";
             break;
+        case ContactType_sel:
+            return @"选择参会人员";
+            break;
         default:
+            return @"通讯录";
             break;
     }
 }

@@ -9,7 +9,7 @@
 #import "MeetingMembersCollection.h"
 #import "MeetingMembersCell.h"
 
-#import "MeetingContactViewController.h"
+#import "UserContactViewController.h"
 
 
 #define kItemWidth (self.width - 60) / 5
@@ -180,7 +180,6 @@ static NSString *CollectionHeaderID = @"MeetingMembersCollectionHeaderID";
         {
             if (self.isDeling)  // 正在删除中
             {
-//                [self.dataMembersArray removeObjectAtIndex:indexPath.row];
                 if ([self.WCDelegate respondsToSelector:@selector(MeetingMembersCollectionSelectedMembers:)]) {
                     [self.WCDelegate MeetingMembersCollectionSelectedMembers:self.dataMembersArray[indexPath.row]];
                 }
@@ -208,8 +207,8 @@ static NSString *CollectionHeaderID = @"MeetingMembersCollectionHeaderID";
 - (void)inviteMembersFromContact {
     if (self.dataMembersArray.count < self.totalNumbers)
     {
-        MeetingContactViewController *contactVC = [[MeetingContactViewController alloc] init];
-        contactVC.contactType = ContactType_contact;
+        UserContactViewController *contactVC = [[UserContactViewController alloc] init];
+        contactVC.contactType = ContactType_sel;
         contactVC.isExitLeftItem = YES;
         [[AppDelegate sharedAppDelegate] pushViewController:contactVC];
     }

@@ -84,7 +84,10 @@
         case LuanchMeetingType_live:
             return @"创建云直播会议";
             break;
+        case LuanchMeetingType_order:
+            return @"会议预约";
         default:
+            return @"会议";
             break;
     }
 }
@@ -102,6 +105,10 @@
         case LuanchMeetingType_live:
             self.tableView.isHiddenFooter = YES;
             self.tableView.MaxMembers = 0;
+            break;
+        case LuanchMeetingType_order:
+            self.tableView.isHiddenFooter = NO;
+            self.tableView.MaxMembers = 100;
             break;
         default:
             break;

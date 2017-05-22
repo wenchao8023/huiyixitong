@@ -122,6 +122,14 @@
     return _latestCollection;
 }
 
+/**
+ *  设置预约会议视图
+ *  隐藏最近联系人
+ */
+- (void)setOrderView {
+    self.latestCollection.hidden = YES;
+}
+
 - (void)MeetingMembersCollectionSelectedMembers:(NSString *)delNameStr {
     [self.latestCollection syncDataMembersArrayWithIdentifier:delNameStr];
 }
@@ -143,7 +151,11 @@
 
 
 
-
+/**
+ *  LatestMembersCollectionDelegate
+ *
+ *  @param memberInfo 点击最近联系人的信息
+ */
 - (void)LatestMembersCollectionDidSelectedMembers:(NSDictionary *)memberInfo {
     WCLog(@"The Member %@'s statu is %@", [[memberInfo allKeys] firstObject], [[memberInfo allValues] firstObject]);
     [self.membersCollection syncDataMembersArrayWithDic:memberInfo];
@@ -222,6 +234,20 @@
     return _dataContentArray;
 }
 
+/**
+ *  加载预约会议的数据
+ */
+- (void)reloadContentData {
+    [self.dataItemArray removeAllObjects];
+    [self.dataItemArray addObjectsFromArray:@[@"会议类型", @"会议主题", @"会议室预订",
+                                              @"会议时间", @"预估时长", @"剩余分钟数"]];
+    [self.dataContentArray removeAllObjects];
+    [self.dataContentArray addObjectsFromArray:@[@"视频会议", @"林瑞的会议", @"深圳-轩辕会议室",
+                                                 @"2017年5月7号 15:07", @"30分钟", @"600分钟"]];
+    
+    [self reloadData];
+}
+
 
 #pragma mark - setter
 - (void)setIsHiddenFooter:(BOOL)isHiddenFooter {
@@ -237,7 +263,13 @@
     _MaxMembers = MaxMembers;
     self.tbFooterView.membersCollection.totalNumbers = _MaxMembers;
     self.tbFooterView.latestCollection.totalNumbers  = _MaxMembers;
+    
+    if (_MaxMembers == 100) {   // 表示 预约会议
+        [self reloadContentData];
+        [self.tbFooterView setOrderView];
+    }
 }
+
 
 
 

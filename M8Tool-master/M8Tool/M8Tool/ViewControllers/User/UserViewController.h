@@ -8,6 +8,9 @@
 
 #import "BaseViewController.h"
 
+/**
+ *  用户界面
+ */
 @interface UserViewController : BaseViewController
 
 @end

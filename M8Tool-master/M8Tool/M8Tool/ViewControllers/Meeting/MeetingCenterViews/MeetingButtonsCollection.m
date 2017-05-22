@@ -11,7 +11,7 @@
 #import "MeetingLuanchViewController.h"
 #import "MeetingOrderViewController.h"
 #import "RecordViewController.h"
-#import "MeetingContactViewController.h"
+#import "UserContactViewController.h"
 
 @interface MeetingButtonsCollection ()<UICollectionViewDelegate, UICollectionViewDataSource>
 
@@ -93,7 +93,8 @@
     
     if (index == 0 ||
         index == 1 ||
-        index == 2) {       //发起 手机会议、视频会议、直播会议
+        index == 2 ||
+        index == 4) {       //发起 手机会议、视频会议、直播会议、会议预约
         MeetingLuanchViewController *luanchVC = [[MeetingLuanchViewController alloc] init];
         luanchVC.isExitLeftItem = YES;
         luanchVC.luanchMeetingType = index;
@@ -101,16 +102,16 @@
     }
     else if (index == 3 ||
              index == 7) {  //发起 手机通话，进入 联系人
-        MeetingContactViewController *contactVC = [[MeetingContactViewController alloc] init];
+        UserContactViewController *contactVC = [[UserContactViewController alloc] init];
         contactVC.isExitLeftItem = YES;
         contactVC.contactType = index == 3 ? ContactType_tel : ContactType_contact;
         [[AppDelegate sharedAppDelegate] pushViewController:contactVC];
     }
-    else if (index == 4) {  //发起 会议预约
-        MeetingOrderViewController *orderVC = [[MeetingOrderViewController alloc] init];
-        orderVC.isExitLeftItem = YES;
-        [[AppDelegate sharedAppDelegate] pushViewController:orderVC];
-    }
+//    else if (index == 4) {  //发起 会议预约
+//        MeetingOrderViewController *orderVC = [[MeetingOrderViewController alloc] init];
+//        orderVC.isExitLeftItem = YES;
+//        [[AppDelegate sharedAppDelegate] pushViewController:orderVC];
+//    }
     else if (index == 5 ||
              index == 6) {  //进入 会议笔记、会议收藏
         RecordViewController *recordvc = [[RecordViewController alloc] init];

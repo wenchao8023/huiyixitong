@@ -50,6 +50,7 @@
     [[UITabBar appearance] setBackgroundImage:[UIImage imageWithColor:WCWhite size:self.tabBar.frame.size]];
     self.delegate = self;
     
+    
     RecordViewController *recordVC      = [[RecordViewController alloc] init];
     recordVC.recordViewType             = RecordViewType_record;
     UINavigationController *recordNav   = [[UINavigationController alloc] initWithRootViewController:recordVC];
@@ -107,7 +108,6 @@
     
 }
 
-
 - (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController {
     
     [self popToNaviTootViewController];
@@ -121,6 +121,8 @@
         [navi popToRootViewControllerAnimated:NO];
     }
 }
+
+
 
 
 

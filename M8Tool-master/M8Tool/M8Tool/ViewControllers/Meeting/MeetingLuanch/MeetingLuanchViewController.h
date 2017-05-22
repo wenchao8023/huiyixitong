@@ -9,13 +9,15 @@
 #import "BaseViewController.h"
 
 /**
- 创建 电话会议、视频会议、直播会议
+ 创建 电话会议、视频会议、直播会议、预约会议
+ 
  */
 typedef enum : NSInteger {
     
     LuanchMeetingType_phone = 0,
-    LuanchMeetingType_video,
-    LuanchMeetingType_live
+    LuanchMeetingType_video = 1,
+    LuanchMeetingType_live  = 2,
+    LuanchMeetingType_order = 4
     
 }LuanchMeetingType;
 

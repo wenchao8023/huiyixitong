@@ -8,6 +8,10 @@
 
 #import "UsrCardView.h"
 
+@interface UsrCardView ()
+
+@end
+
 @implementation UsrCardView
 
 - (instancetype)initWithFrame:(CGRect)frame {
