@@ -147,6 +147,8 @@ static NSString *CollectionHeaderID = @"LatestMembersCollectionHeaderID";
     return nil;
 }
 
+
+
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
     if ([self.statusArray[indexPath.row] isEqualToString:@"1"]) {

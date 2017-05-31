@@ -30,9 +30,9 @@
 
 
 @implementation TBheaderView
-- (instancetype)initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame image:(NSString *)image {
     if (self = [super initWithFrame:frame]) {
-        
+        self.image = [UIImage imageNamed:image];
     }
     return self;
 }
@@ -93,6 +93,8 @@
         
         [self latestCollection];
         self.latestCollection.WCDelegate    = self;
+        
+        
     }
     return self;
 }
@@ -136,11 +138,50 @@
 
 - (void)MeetingMembersCollectionContentHeight:(CGFloat)contentHeight {
     
+    // 改变设置顺序，修复出现视图重叠现象
+    if (contentHeight < _membersCollection.height) {
+        
+        [UIView animateWithDuration:0.4 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            
+            [self.membersCollection setHeight:contentHeight];
+            
+        } completion:^(BOOL finished) {
+            if (finished) {
+                [self.latestCollection setY:contentHeight];
+                [self.latestCollection setHeight:self.height - contentHeight - kSectionHeight];
+            }
+        }];
+    }
+    else {
+        [UIView animateWithDuration:0.4 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            
+            [self.latestCollection setY:contentHeight];
+            [self.latestCollection setHeight:self.height - contentHeight - kSectionHeight];
+            
+        } completion:^(BOOL finished) {
+            if (finished) {
+                [self.membersCollection setHeight:contentHeight];
+            }
+        }];
+    }
+    
+    
     [UIView animateWithDuration:0.4 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         
-        [self.membersCollection setHeight:contentHeight];
+//        if (contentHeight < _membersCollection.height) {
+//            [self.latestCollection setY:contentHeight];
+//            [self.latestCollection setHeight:self.height - contentHeight - kSectionHeight];
+//            [self.membersCollection setHeight:contentHeight];
+//        }
+//        else {
+//            [self.membersCollection setHeight:contentHeight];
+//            [self.latestCollection setY:contentHeight];
+//            [self.latestCollection setHeight:self.height - contentHeight - kSectionHeight];
+//        }
+
         [self.latestCollection setY:contentHeight];
-        [self.latestCollection setHeight:self.height - contentHeight];
+        [self.latestCollection setHeight:self.height - contentHeight - kSectionHeight];
+        
         
     } completion:nil];
 }
@@ -210,8 +251,8 @@
     if (!_tbheaderView) {
         CGRect frame = self.bounds;
         frame.size.height /= 2;
-        _tbheaderView = [[TBheaderView alloc] initWithFrame:frame];
-        _tbheaderView.image = [UIImage imageNamed:@"defaul_publishcover"];
+        _tbheaderView = [[TBheaderView alloc] initWithFrame:frame image:@"defaul_publishcover"];
+//        _tbheaderView.image = [UIImage imageNamed:@"defaul_publishcover"];
     }
     return _tbheaderView;
 }
@@ -253,10 +294,11 @@
 - (void)setIsHiddenFooter:(BOOL)isHiddenFooter {
     _isHiddenFooter = isHiddenFooter;
     self.tableFooterView.hidden = isHiddenFooter;
-
-    if (isHiddenFooter) {
+    self.tableHeaderView.hidden = !isHiddenFooter;
+    
+    if (isHiddenFooter)
         self.tableHeaderView = [self tbheaderView];
-    }
+        
 }
 
 - (void)setMaxMembers:(NSInteger)MaxMembers {
@@ -296,6 +338,11 @@
     else
         return [WCUIKitControl createViewWithFrame:CGRectZero BgColor:[UIColor colorWithRed:0.84 green:0.82 blue:0.79 alpha:1]];
 }
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 0.1;
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     return 1;
 }

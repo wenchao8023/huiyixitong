@@ -1,5 +1,5 @@
 //
-//  UsrCardView.h
+//  UsrCardHeaderView.h
 //  M8Tool
 //
 //  Created by chao on 2017/5/26.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UsrCardView : UITableView
+@interface UsrCardHeaderView : UIView
 
 @end

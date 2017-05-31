@@ -310,8 +310,19 @@
 +(UIImageView*)createImageViewWithFrame:(CGRect)frame
                               ImageName:(NSString*)imageName
 {
+    return [self createImageViewWithFrame:frame
+                                ImageName:imageName
+                                  BgColor:nil];
+}
+
++(UIImageView*)createImageViewWithFrame:(CGRect)frame
+                              ImageName:(NSString*)imageName
+                                BgColor:(UIColor *)bgColor
+{
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:frame];
     imageView.image = [UIImage imageNamed:imageName];
+    if (bgColor)
+        imageView.backgroundColor = bgColor;
     return imageView;
 }
 

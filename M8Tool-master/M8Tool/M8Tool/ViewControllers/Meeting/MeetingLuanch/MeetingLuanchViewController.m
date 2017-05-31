@@ -21,6 +21,8 @@
     [super viewWillAppear:animated];
     
     [self setHeaderTitle:[self getTitle]];
+    
+    
 }
 
 - (void)viewDidLoad {
@@ -30,6 +32,22 @@
     [self createUI];
     
     [self configTabelViewArgu];
+    
+    
+}
+
+
+
+- (void)subView:(UIView *)view {
+    WCLog(@"super class is <#%@#>, originY is <#%g#>, height is <#%g#>", NSStringFromClass([view class]), view.y, view.height);
+    for (UIView *subView in [view subviews]) {
+        if ([subView subviews]) {
+            [self subView:subView];
+        } else {
+            WCLog(@"class is <#%@#>, originY is <#%g#>, height is <#%g#>", NSStringFromClass([subView class]), subView.y, subView.height);
+        }
+    }
+    
 }
 
 - (void)createUI {
@@ -43,8 +61,10 @@
 
 - (MeetingLuanchTableView *)tableView {
     if (!_tableView) {
-        MeetingLuanchTableView *tableView = [[MeetingLuanchTableView alloc] initWithFrame:self.contentView.bounds];
-        tableView.height -= (kDefaultMargin + kDefaultCellHeight);
+        CGRect frame = self.contentView.bounds;
+        frame.size.height -= (kDefaultMargin + kDefaultCellHeight);     // 减去 底部按钮所占的高度
+        MeetingLuanchTableView *tableView = [[MeetingLuanchTableView alloc] initWithFrame:frame
+                                                                                    style:UITableViewStyleGrouped];
         [self.contentView addSubview:(_tableView = tableView)];
     }
     return _tableView;
