@@ -77,6 +77,18 @@
     [logoutBtn addTarget:self action:@selector(onLogout:) forControlEvents:UIControlEventTouchUpInside];
     [footView addSubview:logoutBtn];
     _tableView.tableFooterView = footView;
+    
+    UIButton *testBtn = [[UIButton alloc] initWithFrame:CGRectMake(kDefaultMargin,CGRectGetMaxY(_tableView.frame) + 20,footView.frame.size.width - 2 * kDefaultMargin, 44)];
+    testBtn.backgroundColor = kColorRed;
+    testBtn.layer.cornerRadius = 5.0;
+    [testBtn setTitle:@"测试群组创建" forState:UIControlStateNormal];
+    [testBtn setTitleColor:kColorWhite forState:UIControlStateNormal];
+    testBtn.titleLabel.font = kAppMiddleTextFont;
+    [testBtn addTarget:self action:@selector(testAPI1) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:testBtn];
+}
+- (void)testAPI1 {
+    
 }
 
 - (void)onRecordList
