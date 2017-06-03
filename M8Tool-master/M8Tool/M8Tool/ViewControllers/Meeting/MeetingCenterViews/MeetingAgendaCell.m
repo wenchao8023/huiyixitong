@@ -24,7 +24,7 @@
                                                          textColor:WCWhite
                                                          charSpace:kAppKern_0]
      ];
-    self.iconImage.image = [UIImage imageNamed:imageStr];
+//    self.iconImage.image = [UIImage imageNamed:imageStr];
 }
 
 - (void)awakeFromNib {

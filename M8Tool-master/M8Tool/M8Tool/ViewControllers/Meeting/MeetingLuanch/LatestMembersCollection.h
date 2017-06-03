@@ -24,8 +24,12 @@
 
 @interface LatestMembersCollection : UICollectionView
 
+@property (nonatomic, assign) NSInteger totalNumbers;
+
 @property (nonatomic, weak) id WCDelegate;
 
+
 - (void)syncDataMembersArrayWithIdentifier:(NSString *)identifier;
+- (void)syncCurrentNumbers:(NSInteger)currentNumbers;
 
 @end

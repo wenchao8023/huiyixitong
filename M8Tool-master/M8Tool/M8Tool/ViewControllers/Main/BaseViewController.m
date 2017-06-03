@@ -14,6 +14,7 @@
 
 @implementation BaseViewController
 
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -103,6 +104,8 @@
                                                                        0)];
         WCViewBorder_Radius(contentView, kRadiusView);
         contentView.backgroundColor = WCBgColor;
+        contentView.layer.shadowOffset = CGSizeMake(3, -5);
+        contentView.layer.shadowColor = WCRed.CGColor;
         [self.view addSubview:(_contentView = contentView)];
     }
     return _contentView;

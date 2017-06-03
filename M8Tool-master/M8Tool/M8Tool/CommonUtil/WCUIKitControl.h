@@ -107,7 +107,9 @@
 #pragma mark -- 创建 UIImageView
 +(UIImageView*)createImageViewWithFrame:(CGRect)frame
                               ImageName:(NSString*)imageName;
-
++(UIImageView*)createImageViewWithFrame:(CGRect)frame
+                              ImageName:(NSString*)imageName
+                                BgColor:(UIColor *)bgColor;
 
 #pragma mark -- 创建 UITableView
 +(UITableView *)createTableViewWithFrame:(CGRect)frame

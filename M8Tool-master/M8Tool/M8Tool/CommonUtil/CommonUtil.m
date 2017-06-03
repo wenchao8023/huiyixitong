@@ -170,7 +170,7 @@
                                      charSpace:(int)charSpace {
     NSMutableDictionary *attDict = [NSMutableDictionary dictionaryWithCapacity:0];
     //设置字体、大小
-    [attDict setValue:[UIFont fontWithName:kFontNameSTHeiti size:fontSize] forKey:NSFontAttributeName];
+    [attDict setValue:[UIFont fontWithName:kFontNameHeiti_SC size:fontSize] forKey:NSFontAttributeName];
     //设置字体颜色
     if (textColor)
         [attDict setValue:textColor forKey:NSForegroundColorAttributeName];

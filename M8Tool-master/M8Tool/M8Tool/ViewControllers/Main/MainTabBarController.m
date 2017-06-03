@@ -38,6 +38,7 @@
 {
     [super viewDidAppear:animated];
     
+    
     if(_meetingButton.superview != nil)
     {
         [_meetingButton removeFromSuperview];
@@ -47,8 +48,9 @@
 
 - (void)initTabbar {
     
-    [[UITabBar appearance] setBackgroundImage:[UIImage imageWithColor:WCWhite size:self.tabBar.frame.size]];
+    [[UITabBar appearance] setBackgroundImage:[UIImage imageWithColor:WCBgColor size:self.tabBar.frame.size]];
     self.delegate = self;
+    
     
     RecordViewController *recordVC      = [[RecordViewController alloc] init];
     recordVC.recordViewType             = RecordViewType_record;
@@ -107,7 +109,6 @@
     
 }
 
-
 - (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController {
     
     [self popToNaviTootViewController];
@@ -121,6 +122,8 @@
         [navi popToRootViewControllerAnimated:NO];
     }
 }
+
+
 
 
 

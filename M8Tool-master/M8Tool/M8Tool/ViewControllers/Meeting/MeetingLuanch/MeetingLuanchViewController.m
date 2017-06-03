@@ -21,6 +21,8 @@
     [super viewWillAppear:animated];
     
     [self setHeaderTitle:[self getTitle]];
+    
+    
 }
 
 - (void)viewDidLoad {
@@ -30,6 +32,22 @@
     [self createUI];
     
     [self configTabelViewArgu];
+    
+    
+}
+
+
+
+- (void)subView:(UIView *)view {
+    WCLog(@"super class is <#%@#>, originY is <#%g#>, height is <#%g#>", NSStringFromClass([view class]), view.y, view.height);
+    for (UIView *subView in [view subviews]) {
+        if ([subView subviews]) {
+            [self subView:subView];
+        } else {
+            WCLog(@"class is <#%@#>, originY is <#%g#>, height is <#%g#>", NSStringFromClass([subView class]), subView.y, subView.height);
+        }
+    }
+    
 }
 
 - (void)createUI {
@@ -43,8 +61,10 @@
 
 - (MeetingLuanchTableView *)tableView {
     if (!_tableView) {
-        MeetingLuanchTableView *tableView = [[MeetingLuanchTableView alloc] initWithFrame:self.contentView.bounds];
-        tableView.height -= (kDefaultMargin + kDefaultCellHeight);
+        CGRect frame = self.contentView.bounds;
+        frame.size.height -= (kDefaultMargin + kDefaultCellHeight);     // 减去 底部按钮所占的高度
+        MeetingLuanchTableView *tableView = [[MeetingLuanchTableView alloc] initWithFrame:frame
+                                                                                    style:UITableViewStyleGrouped];
         [self.contentView addSubview:(_tableView = tableView)];
     }
     return _tableView;
@@ -81,10 +101,13 @@
         case LuanchMeetingType_video:
             return @"创建视频会议";
             break;
-        case LuanchMeetingType_audio:
+        case LuanchMeetingType_live:
             return @"创建云直播会议";
             break;
+        case LuanchMeetingType_order:
+            return @"会议预约";
         default:
+            return @"会议";
             break;
     }
 }
@@ -92,16 +115,20 @@
 - (void)configTabelViewArgu {
     switch (self.luanchMeetingType) {
         case LuanchMeetingType_phone:
-            self.tableView.isHiddenHeader = NO;
-            self.tableView.MaxMembers = 6;
+            self.tableView.isHiddenFooter = NO;
+            self.tableView.MaxMembers = 5;
             break;
         case LuanchMeetingType_video:
-            self.tableView.isHiddenHeader = NO;
-            self.tableView.MaxMembers = 4;
+            self.tableView.isHiddenFooter = NO;
+            self.tableView.MaxMembers = 3;
             break;
-        case LuanchMeetingType_audio:
-            self.tableView.isHiddenHeader = YES;
+        case LuanchMeetingType_live:
+            self.tableView.isHiddenFooter = YES;
             self.tableView.MaxMembers = 0;
+            break;
+        case LuanchMeetingType_order:
+            self.tableView.isHiddenFooter = NO;
+            self.tableView.MaxMembers = 100;
             break;
         default:
             break;

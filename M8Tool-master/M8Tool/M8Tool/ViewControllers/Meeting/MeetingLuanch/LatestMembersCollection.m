@@ -52,6 +52,12 @@ static NSString *CollectionHeaderID = @"LatestMembersCollectionHeaderID";
 
 @property (nonatomic, strong) NSMutableArray *statusArray;
 
+
+/**
+ 记录参会人员中的人数，不代表自己这边选中的人数
+ */
+@property (nonatomic, assign) NSInteger currentMembers;
+
 @end
 
 
@@ -77,6 +83,18 @@ static NSString *CollectionHeaderID = @"LatestMembersCollectionHeaderID";
         _dataMembersArray = [NSMutableArray arrayWithCapacity:0];
         [_dataMembersArray addObject:@"木木"];
         [_dataMembersArray addObject:@"林瑞"];
+        [_dataMembersArray addObject:@"女友1"];
+        [_dataMembersArray addObject:@"女友2"];
+        [_dataMembersArray addObject:@"女友3"];
+        [_dataMembersArray addObject:@"女友4"];
+        [_dataMembersArray addObject:@"女友5"];
+        [_dataMembersArray addObject:@"女友6"];
+        [_dataMembersArray addObject:@"女友7"];
+        [_dataMembersArray addObject:@"女友8"];
+        [_dataMembersArray addObject:@"女友9"];
+        [_dataMembersArray addObject:@"女友10"];
+        [_dataMembersArray addObject:@"女友11"];
+        [_dataMembersArray addObject:@"女友12"];
         [_dataMembersArray addObject:@"女友1"];
         [_dataMembersArray addObject:@"女友2"];
         [_dataMembersArray addObject:@"女友3"];
@@ -129,12 +147,25 @@ static NSString *CollectionHeaderID = @"LatestMembersCollectionHeaderID";
     return nil;
 }
 
+
+
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    
     if ([self.statusArray[indexPath.row] isEqualToString:@"1"]) {
         [self.statusArray replaceObjectAtIndex:indexPath.row withObject:@"0"];
     }
     else {
-        [self.statusArray replaceObjectAtIndex:indexPath.row withObject:@"1"];
+        if (self.currentMembers < self.totalNumbers) {
+            [self.statusArray replaceObjectAtIndex:indexPath.row withObject:@"1"];
+        } else {
+            [AppDelegate showAlertWithTitle:@"温馨提示"
+                                    message:[NSString stringWithFormat:@"最多只能邀请: %ld 人", (long)self.totalNumbers]
+                                    okTitle:@"确定"
+                                cancelTitle:nil
+                                         ok:nil
+                                     cancel:nil];
+        }
+        
     }
     
     if ([self.WCDelegate respondsToSelector:@selector(LatestMembersCollectionDidSelectedMembers:)]) {
@@ -152,6 +183,10 @@ static NSString *CollectionHeaderID = @"LatestMembersCollectionHeaderID";
     }
     
     [self reloadData];
+}
+
+- (void)syncCurrentNumbers:(NSInteger)currentNumbers {
+    self.currentMembers = currentNumbers;
 }
 
 
